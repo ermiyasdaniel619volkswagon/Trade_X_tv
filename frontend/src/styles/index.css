@@ -1,0 +1,269 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply box-border;
+  }
+
+  body {
+    @apply bg-zinc-950 text-white transition-colors duration-300;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  /* ============================================= */
+  /* DARK MODE - Brighter Gray Theme */
+  /* ============================================= */
+  .dark {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #242424;
+    --bg-card: #2a2a2a;
+    --bg-card-hover: #333333;
+    --bg-input: #2a2a2a;
+    --bg-navbar: #1a1a1a;
+    --bg-sidebar: #1a1a1a;
+    --text-primary: #f0f0f0;
+    --text-secondary: #b0b0b0;
+    --text-muted: #808080;
+    --border-color: #3a3a3a;
+    --border-light: #4a4a4a;
+    --shadow-color: rgba(0, 0, 0, 0.4);
+  }
+
+  /* Light mode variables */
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f0;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f0f0eb;
+    --bg-input: #f5f5f0;
+    --bg-navbar: #ffffff;
+    --bg-sidebar: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #6b6b6b;
+    --text-muted: #a0a0a0;
+    --border-color: #e8e8e0;
+    --border-light: #d0d0c8;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+  }
+
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-zinc-800/50 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-emerald-500/50 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-emerald-400;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(16, 185, 129, 0.4);
+    border-radius: 2px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: rgba(16, 185, 129, 0.6);
+  }
+
+  .animate-pulse-soft {
+    animation: pulseSoft 4s ease-in-out infinite;
+  }
+
+  .delay-1000 {
+    animation-delay: 1s;
+  }
+
+  @keyframes pulseSoft {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(1.1);
+    }
+  }
+
+  /* ============================================= */
+  /* UTILITY CLASSES FOR GRAY THEME */
+  /* ============================================= */
+  .bg-theme-primary {
+    background-color: var(--bg-primary);
+  }
+  .bg-theme-secondary {
+    background-color: var(--bg-secondary);
+  }
+  .bg-theme-card {
+    background-color: var(--bg-card);
+  }
+  .text-theme-primary {
+    color: var(--text-primary);
+  }
+  .text-theme-secondary {
+    color: var(--text-secondary);
+  }
+  .border-theme {
+    border-color: var(--border-color);
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] p-6 transition-all duration-300;
+  }
+  
+  .card-hover {
+    @apply hover:border-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/10 hover:scale-[1.02] transition-all duration-500;
+  }
+
+  .btn-primary {
+    @apply px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-2.5 bg-white/10 backdrop-blur-sm border border-white/10 hover:bg-white/20 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 text-white placeholder-zinc-500;
+  }
+
+  .status-badge {
+    @apply px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide;
+  }
+
+  .status-pending {
+    @apply bg-amber-500/20 text-amber-400 border border-amber-500/20;
+  }
+
+  .status-approved {
+    @apply bg-emerald-500/20 text-emerald-400 border border-emerald-500/20;
+  }
+
+  .status-revision {
+    @apply bg-rose-500/20 text-rose-400 border border-rose-500/20;
+  }
+
+  .status-rejected {
+    @apply bg-red-500/20 text-red-400 border border-red-500/20;
+  }
+}
+
+/* ============================================= */
+/* MARQUEE ANIMATION FOR VIDEO TICKER */
+/* ============================================= */
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+  display: inline-block;
+  padding-left: 100%;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* ============================================= */
+/* CUSTOM ANIMATIONS FOR LOADING SPINNER */
+/* ============================================= */
+
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce-soft {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.02);
+  }
+}
+
+@keyframes orbit {
+  0% {
+    transform: rotate(0deg) translateX(var(--orbit-radius, 32px)) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(var(--orbit-radius, 32px)) rotate(-360deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(10px) translateX(-10px);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translateY(-10px) translateX(15px);
+    opacity: 0.9;
+  }
+}
+
+/* Utility Classes */
+.animate-spin-slow {
+  animation: spin-slow 1.8s linear infinite;
+}
+
+.animate-bounce-soft {
+  animation: bounce-soft 2s ease-in-out infinite;
+}
+
+.animate-orbit {
+  animation: orbit 2.5s linear infinite;
+}
+
+.animate-float {
+  animation: float 15s ease-in-out infinite;
+}
+
