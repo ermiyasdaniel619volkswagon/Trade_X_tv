@@ -1,39 +1,53 @@
-import validator from 'validator';
+
 
 export const validateAdvertisingRequest = (data) => {
   const errors = [];
 
-  // Company Information
+  // Company Information Validation
   if (!data.companyName || data.companyName.trim().length < 2) {
     errors.push({ field: 'companyName', message: 'Company name must be at least 2 characters' });
   }
 
   if (!data.companyIndustry || data.companyIndustry.trim().length < 2) {
-    errors.push({ field: 'companyIndustry', message: 'Industry is required' });
+    errors.push({ field: 'companyIndustry', message: 'Industry category is required' });
   }
 
   if (!data.contactPerson || data.contactPerson.trim().length < 2) {
-    errors.push({ field: 'contactPerson', message: 'Contact person is required' });
+    errors.push({ field: 'contactPerson', message: 'Contact person name is required' });
   }
 
-  // Advertising Details
-  const validAdTypes = ['tv_spot', 'radio_ad', 'digital_campaign', 'sponsorship', 'custom'];
+  // TRADEX Media Kit Service Verification
+  const validAdTypes = [
+    'starter_visibility',
+    'growth_partner',
+    'strategic_sponsor',
+    'business_documentary',
+    'embassy_promotion',
+    'livestream_launch',
+    'studio_rental',
+    'digital_ads'
+  ];
+
   if (!data.adType || !validAdTypes.includes(data.adType)) {
-    errors.push({ field: 'adType', message: 'Invalid advertising type' });
+    errors.push({ field: 'adType', message: 'Invalid advertising package selected' });
   }
 
-  if (!data.duration || data.duration < 1 || data.duration > 52) {
-    errors.push({ field: 'duration', message: 'Duration must be between 1 and 52 weeks' });
-  }
-
-  // Budget
+  // ETB Budget Validation Lookups
   if (data.budgetRange) {
-    if (data.budgetRange.min < 0 || data.budgetRange.max < 0) {
-      errors.push({ field: 'budgetRange', message: 'Budget values must be positive' });
+    const minBudget = Number(data.budgetRange.min || 0);
+    const maxBudget = Number(data.budgetRange.max || 0);
+
+    if (minBudget < 0 || maxBudget < 0) {
+      errors.push({ field: 'budgetRange', message: 'Budget metrics must be non-negative values' });
     }
-    if (data.budgetRange.min > data.budgetRange.max) {
-      errors.push({ field: 'budgetRange', message: 'Minimum budget cannot exceed maximum budget' });
+    if (minBudget > maxBudget && maxBudget > 0) {
+      errors.push({ field: 'budgetRange', message: 'Minimum budget range cannot exceed maximum value' });
     }
+  }
+
+  // Legal Agreement Validation
+  if (!data.agreementAccepted) {
+    errors.push({ field: 'agreementAccepted', message: 'You must review and accept the media alignment agreement' });
   }
 
   return {
@@ -44,22 +58,14 @@ export const validateAdvertisingRequest = (data) => {
 
 export const validateProfileUpdate = (data) => {
   const errors = [];
-
-  if (data.email && !validator.isEmail(data.email)) {
-    errors.push({ field: 'email', message: 'Invalid email address' });
+  if (data.firstName && data.firstName.trim().length < 2) {
+    errors.push({ field: 'firstName', message: 'First name must contain at least 2 characters' });
   }
-
-  if (data.phone && !validator.isMobilePhone(data.phone)) {
-    errors.push({ field: 'phone', message: 'Invalid phone number' });
+  if (data.lastName && data.lastName.trim().length < 2) {
+    errors.push({ field: 'lastName', message: 'Last name must contain at least 2 characters' });
   }
-
   return {
     isValid: errors.length === 0,
     errors,
   };
-};
-
-export default {
-  validateAdvertisingRequest,
-  validateProfileUpdate,
 };

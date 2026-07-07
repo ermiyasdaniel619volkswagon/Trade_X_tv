@@ -19,6 +19,57 @@ const customerSchema = new mongoose.Schema({
     minlength: [8, 'Password must be at least 8 characters'],
     select: false,
   },
+  // ✅ Personal Info
+  firstName: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  lastName: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  phone: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  phoneCode: {
+    type: String,
+    default: '+251',
+  },
+  // ✅ Company Information (for auto-populating advertising requests)
+  companyName: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  companyIndustry: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  companyDescription: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  companyWebsite: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  // ✅ Social Media
+  socialMedia: {
+    facebook: { type: String, trim: true, default: '' },
+    telegram: { type: String, trim: true, default: '' },
+    linkedin: { type: String, trim: true, default: '' },
+    instagram: { type: String, trim: true, default: '' },
+    youtube: { type: String, trim: true, default: '' },
+    twitter: { type: String, trim: true, default: '' },
+    tiktok: { type: String, trim: true, default: '' },
+  },
   isActive: {
     type: Boolean,
     default: true,

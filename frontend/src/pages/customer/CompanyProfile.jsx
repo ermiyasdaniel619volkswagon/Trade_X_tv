@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useTheme } from '../../context/ThemeContext.jsx';
@@ -13,23 +14,34 @@ import {
   FiSave,
   FiRefreshCw,
   FiCheckCircle,
-  FiAlertCircle,
   FiEdit2,
-  FiFileText,
+  FiInfo,
 } from 'react-icons/fi';
 
 const CompanyProfile = () => {
-  const { user, login } = useAuth();
+  const { user } = useAuth();
   const { isDark } = useTheme();
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [profile, setProfile] = useState({
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
+    phoneCode: '+251',
     companyName: '',
     companyIndustry: '',
     companyDescription: '',
     companyWebsite: '',
+    socialMedia: {
+      facebook: '',
+      telegram: '',
+      linkedin: '',
+      instagram: '',
+      youtube: '',
+      twitter: '',
+      tiktok: '',
+    },
   });
   const [errors, setErrors] = useState({});
   const [isEditing, setIsEditing] = useState(false);
@@ -43,7 +55,29 @@ const CompanyProfile = () => {
     try {
       const response = await api.get('/customer/profile');
       if (response.data.success) {
-        setProfile(response.data.profile);
+        const data = response.data.customer;
+        if (data) {
+          setProfile({
+            firstName: data.firstName || '',
+            lastName: data.lastName || '',
+            email: data.email || '',
+            phone: data.phone || '',
+            phoneCode: data.phoneCode || '+251',
+            companyName: data.companyName || '',
+            companyIndustry: data.companyIndustry || '',
+            companyDescription: data.companyDescription || '',
+            companyWebsite: data.companyWebsite || '',
+            socialMedia: {
+              facebook: data.socialMedia?.facebook || '',
+              telegram: data.socialMedia?.telegram || '',
+              linkedin: data.socialMedia?.linkedin || '',
+              instagram: data.socialMedia?.instagram || '',
+              youtube: data.socialMedia?.youtube || '',
+              twitter: data.socialMedia?.twitter || '',
+              tiktok: data.socialMedia?.tiktok || '',
+            },
+          });
+        }
       }
     } catch (error) {
       toast.error('Failed to load profile');
@@ -61,12 +95,15 @@ const CompanyProfile = () => {
     }
   };
 
+  const handleSocialChange = (platform, value) => {
+    setProfile(prev => ({
+      ...prev,
+      socialMedia: { ...prev.socialMedia, [platform]: value }
+    }));
+  };
+
   const validate = () => {
     const newErrors = {};
-    if (!profile.email) newErrors.email = 'Email is required';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profile.email)) {
-      newErrors.email = 'Invalid email format';
-    }
     if (profile.phone && !/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/.test(profile.phone)) {
       newErrors.phone = 'Invalid phone number';
     }
@@ -84,8 +121,7 @@ const CompanyProfile = () => {
       if (response.data.success) {
         toast.success('Profile updated successfully');
         setIsEditing(false);
-        // Update auth context with new profile data
-        await login(user.email, user.password);
+        await loadProfile();
       }
     } catch (error) {
       toast.error(error.response?.data?.error || 'Failed to update profile');
@@ -158,6 +194,49 @@ const CompanyProfile = () => {
             : 'bg-white/60 border border-emerald-100/50'
         } backdrop-blur-sm`}>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Personal Info */}
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className={`block text-sm font-medium mb-1.5 ${isDark ? 'text-emerald-200/70' : 'text-emerald-800/70'}`}>
+                  <FiUser className="inline mr-1.5" size={14} />
+                  First Name *
+                </label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={profile.firstName || ''}
+                  onChange={handleChange}
+                  disabled={!isEditing}
+                  className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all duration-300 ${
+                    isDark
+                      ? 'bg-[#032e1d]/40 border-white/10 focus:ring-emerald-500/50 text-white placeholder-emerald-200/30'
+                      : 'bg-emerald-50/50 border-emerald-100 focus:ring-emerald-500/50 text-emerald-950 placeholder-emerald-800/30'
+                  } ${!isEditing ? 'opacity-60 cursor-not-allowed' : ''}`}
+                  placeholder="First Name"
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-medium mb-1.5 ${isDark ? 'text-emerald-200/70' : 'text-emerald-800/70'}`}>
+                  <FiUser className="inline mr-1.5" size={14} />
+                  Last Name *
+                </label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={profile.lastName || ''}
+                  onChange={handleChange}
+                  disabled={!isEditing}
+                  className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all duration-300 ${
+                    isDark
+                      ? 'bg-[#032e1d]/40 border-white/10 focus:ring-emerald-500/50 text-white placeholder-emerald-200/30'
+                      : 'bg-emerald-50/50 border-emerald-100 focus:ring-emerald-500/50 text-emerald-950 placeholder-emerald-800/30'
+                  } ${!isEditing ? 'opacity-60 cursor-not-allowed' : ''}`}
+                  placeholder="Last Name"
+                />
+              </div>
+            </div>
+
+            {/* Email & Phone */}
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className={`block text-sm font-medium mb-1.5 ${isDark ? 'text-emerald-200/70' : 'text-emerald-800/70'}`}>
@@ -168,21 +247,17 @@ const CompanyProfile = () => {
                   type="email"
                   name="email"
                   value={profile.email || ''}
-                  onChange={handleChange}
-                  disabled={!isEditing}
+                  disabled={true}
                   className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all duration-300 ${
                     isDark
-                      ? 'bg-[#032e1d]/40 border-white/10 focus:ring-emerald-500/50 text-white placeholder-emerald-200/30'
-                      : 'bg-emerald-50/50 border-emerald-100 focus:ring-emerald-500/50 text-emerald-950 placeholder-emerald-800/30'
-                  } ${errors.email ? 'border-rose-500/50 focus:ring-rose-500/30' : ''} ${
-                    !isEditing ? 'opacity-60 cursor-not-allowed' : ''
-                  }`}
+                      ? 'bg-[#032e1d]/40 border-white/10 text-white'
+                      : 'bg-emerald-50/50 border-emerald-100 text-emerald-950'
+                  } opacity-60 cursor-not-allowed`}
                   placeholder="your@email.com"
-                  required
                 />
-                {errors.email && (
-                  <p className="text-xs text-rose-400 mt-1">{errors.email}</p>
-                )}
+                <p className={`text-xs mt-1 ${isDark ? 'text-emerald-200/30' : 'text-emerald-800/30'}`}>
+                  Email cannot be changed
+                </p>
               </div>
 
               <div>
@@ -190,27 +265,46 @@ const CompanyProfile = () => {
                   <FiPhone className="inline mr-1.5" size={14} />
                   Phone
                 </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={profile.phone || ''}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all duration-300 ${
-                    isDark
-                      ? 'bg-[#032e1d]/40 border-white/10 focus:ring-emerald-500/50 text-white placeholder-emerald-200/30'
-                      : 'bg-emerald-50/50 border-emerald-100 focus:ring-emerald-500/50 text-emerald-950 placeholder-emerald-800/30'
-                  } ${errors.phone ? 'border-rose-500/50 focus:ring-rose-500/30' : ''} ${
-                    !isEditing ? 'opacity-60 cursor-not-allowed' : ''
-                  }`}
-                  placeholder="+1 (555) 123-4567"
-                />
+                <div className="flex gap-2">
+                  <select
+                    name="phoneCode"
+                    value={profile.phoneCode || '+251'}
+                    onChange={handleChange}
+                    disabled={!isEditing}
+                    className={`px-3 py-3 rounded-xl border text-sm focus:outline-none focus:ring-2 transition-all duration-300 ${
+                      isDark
+                        ? 'bg-[#032e1d]/40 border-white/10 focus:ring-emerald-500/50 text-white'
+                        : 'bg-emerald-50/50 border-emerald-100 focus:ring-emerald-500/50 text-emerald-950'
+                    } ${!isEditing ? 'opacity-60 cursor-not-allowed' : ''}`}
+                  >
+                    <option value="+251">+251</option>
+                    <option value="+1">+1</option>
+                    <option value="+44">+44</option>
+                    <option value="+971">+971</option>
+                  </select>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={profile.phone || ''}
+                    onChange={handleChange}
+                    disabled={!isEditing}
+                    className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all duration-300 ${
+                      isDark
+                        ? 'bg-[#032e1d]/40 border-white/10 focus:ring-emerald-500/50 text-white placeholder-emerald-200/30'
+                        : 'bg-emerald-50/50 border-emerald-100 focus:ring-emerald-500/50 text-emerald-950 placeholder-emerald-800/30'
+                    } ${errors.phone ? 'border-rose-500/50 focus:ring-rose-500/30' : ''} ${
+                      !isEditing ? 'opacity-60 cursor-not-allowed' : ''
+                    }`}
+                    placeholder="911 223 344"
+                  />
+                </div>
                 {errors.phone && (
                   <p className="text-xs text-rose-400 mt-1">{errors.phone}</p>
                 )}
               </div>
             </div>
 
+            {/* Company Info */}
             <div>
               <label className={`block text-sm font-medium mb-1.5 ${isDark ? 'text-emerald-200/70' : 'text-emerald-800/70'}`}>
                 <FiBriefcase className="inline mr-1.5" size={14} />
@@ -246,7 +340,7 @@ const CompanyProfile = () => {
                     ? 'bg-[#032e1d]/40 border-white/10 focus:ring-emerald-500/50 text-white placeholder-emerald-200/30'
                     : 'bg-emerald-50/50 border-emerald-100 focus:ring-emerald-500/50 text-emerald-950 placeholder-emerald-800/30'
                 } ${!isEditing ? 'opacity-60 cursor-not-allowed' : ''}`}
-                placeholder="Industry"
+                placeholder="e.g. Technology, Export, Finance"
               />
             </div>
 
@@ -289,6 +383,34 @@ const CompanyProfile = () => {
               />
             </div>
 
+            {/* Social Media */}
+            <div className="border-t border-white/5 pt-4">
+              <h4 className={`text-sm font-medium mb-3 ${isDark ? 'text-emerald-200/70' : 'text-emerald-800/70'}`}>
+                Social Media Profiles
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {['facebook', 'telegram', 'linkedin', 'instagram', 'youtube', 'twitter', 'tiktok'].map((platform) => (
+                  <div key={platform}>
+                    <label className={`block text-xs capitalize font-medium mb-1 ${isDark ? 'text-emerald-200/50' : 'text-emerald-800/50'}`}>
+                      {platform}
+                    </label>
+                    <input
+                      type="text"
+                      value={profile.socialMedia[platform] || ''}
+                      onChange={(e) => handleSocialChange(platform, e.target.value)}
+                      disabled={!isEditing}
+                      className={`w-full px-4 py-2 rounded-xl border text-sm focus:outline-none focus:ring-2 transition-all duration-300 ${
+                        isDark
+                          ? 'bg-[#032e1d]/40 border-white/10 focus:ring-emerald-500/50 text-white placeholder-emerald-200/30'
+                          : 'bg-emerald-50/50 border-emerald-100 focus:ring-emerald-500/50 text-emerald-950 placeholder-emerald-800/30'
+                      } ${!isEditing ? 'opacity-60 cursor-not-allowed' : ''}`}
+                      placeholder={`@username or URL`}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {isEditing && (
               <div className="flex gap-3 pt-4 border-t border-white/5">
                 <button
@@ -327,50 +449,12 @@ const CompanyProfile = () => {
           </form>
         </div>
 
-        {/* Account Info */}
-        <div className={`p-6 rounded-2xl ${
-          isDark
-            ? 'bg-[#032e1d]/40 border border-white/5'
-            : 'bg-white/60 border border-emerald-100/50'
-        } backdrop-blur-sm`}>
-          <h3 className={`text-sm font-semibold mb-4 ${isDark ? 'text-white' : 'text-emerald-950'}`}>
-            Account Information
-          </h3>
-          <div className="grid md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <span className={`block text-xs ${isDark ? 'text-emerald-200/40' : 'text-emerald-800/40'}`}>
-                Account Type
-              </span>
-              <span className={isDark ? 'text-white' : 'text-emerald-950'}>
-                Customer
-              </span>
-            </div>
-            <div>
-              <span className={`block text-xs ${isDark ? 'text-emerald-200/40' : 'text-emerald-800/40'}`}>
-                Status
-              </span>
-              <span className="text-emerald-500 flex items-center gap-1.5">
-                <FiCheckCircle size={14} />
-                Active
-              </span>
-            </div>
-            <div>
-              <span className={`block text-xs ${isDark ? 'text-emerald-200/40' : 'text-emerald-800/40'}`}>
-                Member Since
-              </span>
-              <span className={isDark ? 'text-white' : 'text-emerald-950'}>
-                {new Date(profile.createdAt).toLocaleDateString()}
-              </span>
-            </div>
-            <div>
-              <span className={`block text-xs ${isDark ? 'text-emerald-200/40' : 'text-emerald-800/40'}`}>
-                Last Login
-              </span>
-              <span className={isDark ? 'text-white' : 'text-emerald-950'}>
-                {profile.lastLogin ? new Date(profile.lastLogin).toLocaleString() : 'N/A'}
-              </span>
-            </div>
-          </div>
+        {/* Info Notice */}
+        <div className={`p-4 rounded-xl border ${isDark ? 'bg-emerald-950/20 border-emerald-500/20' : 'bg-emerald-50/50 border-emerald-200'}`}>
+          <p className={`text-sm flex items-start gap-2 ${isDark ? 'text-emerald-300' : 'text-emerald-700'}`}>
+            <FiInfo className="flex-shrink-0 mt-0.5" size={16} />
+            Your company information will be automatically populated when creating new advertising requests.
+          </p>
         </div>
       </div>
     </>

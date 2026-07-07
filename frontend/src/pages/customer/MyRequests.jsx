@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useTheme } from '../../context/ThemeContext.jsx';
@@ -11,7 +12,6 @@ import {
   FiClock,
   FiCheckCircle,
   FiXCircle,
-  FiAlertCircle,
   FiEye,
   FiRefreshCw,
   FiFilter,
@@ -37,6 +37,7 @@ import {
   FiMusic,
   FiTarget,
   FiMail,
+  FiMessageSquare,
 } from 'react-icons/fi';
 import { format, formatDistanceToNow } from 'date-fns';
 
@@ -59,6 +60,9 @@ const MyRequests = () => {
     loadRequests();
   }, [pagination.page, filter]);
 
+  // =============================================
+  // LOAD REQUESTS
+  // =============================================
   const loadRequests = async () => {
     setLoading(true);
     try {
@@ -70,11 +74,11 @@ const MyRequests = () => {
 
       const response = await api.get(`/customer/advertising?${params}`);
       if (response.data.success) {
-        setRequests(response.data.requests);
+        setRequests(response.data.requests || []);
         setPagination({
           ...pagination,
-          total: response.data.pagination.total,
-          pages: response.data.pagination.pages,
+          total: response.data.pagination?.total || 0,
+          pages: response.data.pagination?.pages || 0,
         });
       }
     } catch (error) {
@@ -85,30 +89,33 @@ const MyRequests = () => {
     }
   };
 
+  // =============================================
+  // DELETE REQUEST
+  // =============================================
   const handleDelete = async (requestId) => {
-    if (!window.confirm('Are you sure you want to delete this request?')) return;
+    if (!window.confirm('Are you sure you want to cancel this request?')) return;
     
     setIsSubmitting(true);
     try {
       const response = await api.delete(`/customer/advertising/${requestId}`);
       if (response.data.success) {
-        toast.success('Request deleted successfully');
+        toast.success('Request cancelled successfully');
         loadRequests();
       }
     } catch (error) {
-      toast.error(error.response?.data?.error || 'Failed to delete request');
+      toast.error(error.response?.data?.error || 'Failed to cancel request');
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  // =============================================
+  // SUBMIT REQUEST FOR REVIEW
+  // =============================================
   const handleSubmit = async (requestId) => {
     setIsSubmitting(true);
     try {
-      const response = await api.post(`/customer/advertising/${requestId}/submit`, {
-        agreementAccepted: true,
-        signature: true,
-      });
+      const response = await api.post(`/customer/advertising/${requestId}/submit`);
       if (response.data.success) {
         toast.success('Request submitted for review!');
         loadRequests();
@@ -121,7 +128,51 @@ const MyRequests = () => {
   };
 
   // =============================================
-  // ✅ SOCIAL MEDIA ICON HELPER
+  // ✅ EDIT REQUEST - Navigate to Dashboard with edit mode
+  // =============================================
+  const handleEdit = (request) => {
+    // Store the request data in localStorage or state to edit
+    // For now, we'll navigate to the dashboard with the request ID
+    // You can implement this based on your routing
+    toast.success('Edit functionality - Redirecting to edit form...');
+    // Navigate to dashboard with edit mode
+    // window.location.href = `/customer/dashboard?edit=${request._id}`;
+    
+    // For now, show a message
+    toast.custom((t) => (
+      <div className={`${t.visible ? 'animate-enter' : 'animate-leave'} max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}>
+        <div className="flex-1 w-0 p-4">
+          <div className="flex items-start">
+            <div className="flex-shrink-0 pt-0.5">
+              <FiEdit2 className="h-10 w-10 text-emerald-500" />
+            </div>
+            <div className="ml-3 flex-1">
+              <p className="text-sm font-medium text-gray-900">
+                Edit Request
+              </p>
+              <p className="text-sm text-gray-500">
+                Edit functionality is available on the Dashboard page.
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                Click "New Request" and select "Edit" on your request.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex border-l border-gray-200">
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-emerald-600 hover:text-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    ), { duration: 5000 });
+  };
+
+  // =============================================
+  // SOCIAL MEDIA HELPERS
   // =============================================
   const getSocialIcon = (platform) => {
     const icons = {
@@ -162,46 +213,63 @@ const MyRequests = () => {
     return labels[platform] || platform;
   };
 
+  // =============================================
+  // STATUS HELPERS
+  // =============================================
   const getStatusBadge = (status) => {
     const map = {
-      draft: 'bg-slate-500/20 text-slate-400 border border-slate-500/20',
       pending: 'bg-amber-500/20 text-amber-400 border border-amber-500/20',
       reviewing: 'bg-blue-500/20 text-blue-400 border border-blue-500/20',
       approved: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20',
       rejected: 'bg-rose-500/20 text-rose-400 border border-rose-500/20',
-      production: 'bg-purple-500/20 text-purple-400 border border-purple-500/20',
+      in_production: 'bg-purple-500/20 text-purple-400 border border-purple-500/20',
       completed: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20',
-      cancelled: 'bg-red-500/20 text-red-400 border border-red-500/20',
+      revision_required: 'bg-orange-500/20 text-orange-400 border border-orange-500/20',
     };
     return map[status] || 'bg-slate-500/20 text-slate-400 border border-slate-500/20';
   };
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'draft': return <FiFileText className="text-slate-400" />;
       case 'pending': return <FiClock className="text-amber-400" />;
       case 'reviewing': return <FiEye className="text-blue-400" />;
       case 'approved': return <FiCheckCircle className="text-emerald-400" />;
       case 'rejected': return <FiXCircle className="text-rose-400" />;
-      case 'production': return <FiTrendingUp className="text-purple-400" />;
+      case 'in_production': return <FiTrendingUp className="text-purple-400" />;
       case 'completed': return <FiCheckCircle className="text-emerald-400" />;
-      case 'cancelled': return <FiXCircle className="text-red-400" />;
+      case 'revision_required': return <FiMessageSquare className="text-orange-400" />;
       default: return <FiInfo className="text-slate-400" />;
     }
   };
 
   const getStatusLabel = (status) => {
     const labels = {
-      draft: 'Draft',
       pending: 'Pending Review',
       reviewing: 'Under Review',
       approved: 'Approved',
       rejected: 'Rejected',
-      production: 'In Production',
+      in_production: 'In Production',
       completed: 'Completed',
-      cancelled: 'Cancelled',
+      revision_required: 'Revision Required',
     };
     return labels[status] || status;
+  };
+
+  // =============================================
+  // GET AD TYPE LABEL
+  // =============================================
+  const getAdTypeLabel = (value) => {
+    const types = {
+      starter_visibility: 'Starter Visibility',
+      growth_partner: 'Growth Partner',
+      strategic_sponsor: 'Strategic Sponsor',
+      business_documentary: 'Business Documentary',
+      embassy_promotion: 'Embassy Promotion',
+      livestream_launch: 'Livestream Launch',
+      studio_rental: 'Studio Rental',
+      digital_ads: 'Digital Ads Boost',
+    };
+    return types[value] || value?.replace('_', ' ').toUpperCase() || 'N/A';
   };
 
   const toggleExpand = (id) => {
@@ -275,13 +343,13 @@ const MyRequests = () => {
                 }`}
               >
                 <option value="all">All Requests</option>
-                <option value="draft">Draft</option>
                 <option value="pending">Pending Review</option>
                 <option value="reviewing">Under Review</option>
                 <option value="approved">Approved</option>
                 <option value="rejected">Rejected</option>
-                <option value="production">In Production</option>
+                <option value="in_production">In Production</option>
                 <option value="completed">Completed</option>
+                <option value="revision_required">Revision Required</option>
               </select>
             </div>
             <div className="flex-1" />
@@ -319,9 +387,7 @@ const MyRequests = () => {
                     : 'bg-white/60 border border-emerald-100/50 hover:border-emerald-400/30'
                 } backdrop-blur-sm`}
               >
-                {/* ============================================= */}
-                {/* ✅ HEADER - Always Visible */}
-                {/* ============================================= */}
+                {/* HEADER */}
                 <div
                   className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer"
                   onClick={() => toggleExpand(request._id)}
@@ -332,8 +398,12 @@ const MyRequests = () => {
                         ? 'bg-emerald-500/20 text-emerald-400'
                         : request.status === 'pending' || request.status === 'reviewing'
                         ? 'bg-amber-500/20 text-amber-400'
-                        : request.status === 'rejected' || request.status === 'cancelled'
+                        : request.status === 'rejected'
                         ? 'bg-rose-500/20 text-rose-400'
+                        : request.status === 'revision_required'
+                        ? 'bg-orange-500/20 text-orange-400'
+                        : request.status === 'in_production'
+                        ? 'bg-purple-500/20 text-purple-400'
                         : 'bg-slate-500/20 text-slate-400'
                     }`}>
                       {getStatusIcon(request.status)}
@@ -360,15 +430,11 @@ const MyRequests = () => {
                   </div>
                 </div>
 
-                {/* ============================================= */}
-                {/* ✅ EXPANDED DETAILS - ALL INFORMATION */}
-                {/* ============================================= */}
+                {/* EXPANDED DETAILS */}
                 {expandedId === request._id && (
                   <div className="mt-4 pt-4 border-t border-white/5 space-y-4 animate-slide-down">
                     
-                    {/* ============================================= */}
-                    {/* ✅ COMPANY INFORMATION */}
-                    {/* ============================================= */}
+                    {/* Company Information */}
                     <div>
                       <h4 className={`text-xs font-semibold uppercase tracking-wider mb-2 ${isDark ? 'text-emerald-400' : 'text-emerald-700'}`}>
                         <FiBriefcase className="inline mr-1.5" size={12} />
@@ -401,7 +467,6 @@ const MyRequests = () => {
                           </span>
                         </div>
                         
-                        {/* ✅ Phone Number with Country Code */}
                         {request.contactPhone && (
                           <div>
                             <span className={`block text-xs ${isDark ? 'text-emerald-200/40' : 'text-emerald-800/40'}`}>
@@ -414,7 +479,6 @@ const MyRequests = () => {
                           </div>
                         )}
                         
-                        {/* ✅ Website */}
                         {request.companyWebsite && (
                           <div>
                             <span className={`block text-xs ${isDark ? 'text-emerald-200/40' : 'text-emerald-800/40'}`}>
@@ -434,9 +498,7 @@ const MyRequests = () => {
                       </div>
                     </div>
 
-                    {/* ============================================= */}
-                    {/* ✅ SOCIAL MEDIA PROFILES */}
-                    {/* ============================================= */}
+                    {/* Social Media */}
                     {request.socialMedia && Object.values(request.socialMedia).some(v => v) && (
                       <div>
                         <h4 className={`text-xs font-semibold uppercase tracking-wider mb-2 ${isDark ? 'text-emerald-400' : 'text-emerald-700'}`}>
@@ -465,9 +527,7 @@ const MyRequests = () => {
                       </div>
                     )}
 
-                    {/* ============================================= */}
-                    {/* ✅ COMPANY DESCRIPTION */}
-                    {/* ============================================= */}
+                    {/* Company Description */}
                     {request.companyDescription && (
                       <div className={`p-3 rounded-xl ${
                         isDark ? 'bg-white/5' : 'bg-emerald-50/50'
@@ -482,47 +542,19 @@ const MyRequests = () => {
                       </div>
                     )}
 
-                    {/* ============================================= */}
-                    {/* ✅ ADVERTISING DETAILS */}
-                    {/* ============================================= */}
+                    {/* Advertising Details */}
                     <div>
                       <h4 className={`text-xs font-semibold uppercase tracking-wider mb-2 ${isDark ? 'text-emerald-400' : 'text-emerald-700'}`}>
                         <FiTarget className="inline mr-1.5" size={12} />
                         Advertising Details
                       </h4>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
                         <div>
                           <span className={`block text-xs ${isDark ? 'text-emerald-200/40' : 'text-emerald-800/40'}`}>
-                            Ad Type
+                            Ad Package
                           </span>
                           <span className={`font-medium ${isDark ? 'text-white' : 'text-emerald-950'}`}>
-                            {request.adType?.replace('_', ' ').toUpperCase() || 'N/A'}
-                          </span>
-                        </div>
-                        <div>
-                          <span className={`block text-xs ${isDark ? 'text-emerald-200/40' : 'text-emerald-800/40'}`}>
-                            <FiPackage className="inline mr-1" size={12} />
-                            Package
-                          </span>
-                          <span className={`font-medium ${isDark ? 'text-white' : 'text-emerald-950'}`}>
-                            {request.packageType?.charAt(0).toUpperCase() + request.packageType?.slice(1) || 'N/A'}
-                          </span>
-                        </div>
-                        <div>
-                          <span className={`block text-xs ${isDark ? 'text-emerald-200/40' : 'text-emerald-800/40'}`}>
-                            <FiCalendar className="inline mr-1" size={12} />
-                            Duration
-                          </span>
-                          <span className={`font-medium ${isDark ? 'text-white' : 'text-emerald-950'}`}>
-                            {request.duration} weeks
-                          </span>
-                        </div>
-                        <div>
-                          <span className={`block text-xs ${isDark ? 'text-emerald-200/40' : 'text-emerald-800/40'}`}>
-                            Frequency
-                          </span>
-                          <span className={`font-medium ${isDark ? 'text-white' : 'text-emerald-950'}`}>
-                            {request.frequency}
+                            {getAdTypeLabel(request.adType)}
                           </span>
                         </div>
                         <div>
@@ -531,7 +563,7 @@ const MyRequests = () => {
                             Budget Range
                           </span>
                           <span className={`font-medium ${isDark ? 'text-white' : 'text-emerald-950'}`}>
-                            ${request.budgetRange?.min || 0} - ${request.budgetRange?.max || 0}
+                            {request.budgetRange?.min || 0} - {request.budgetRange?.max || 0} ETB
                           </span>
                         </div>
                         <div>
@@ -554,12 +586,20 @@ const MyRequests = () => {
                             </span>
                           </div>
                         )}
+                        {request.finalPrice && (
+                          <div>
+                            <span className={`block text-xs ${isDark ? 'text-emerald-200/40' : 'text-emerald-800/40'}`}>
+                              Final Price
+                            </span>
+                            <span className={`font-medium text-emerald-400`}>
+                              {request.finalPrice.toLocaleString()} ETB
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
 
-                    {/* ============================================= */}
-                    {/* ✅ SUPERVISOR NOTES */}
-                    {/* ============================================= */}
+                    {/* Supervisor Notes */}
                     {request.supervisorNotes && (
                       <div className={`p-3 rounded-xl ${
                         isDark ? 'bg-blue-500/10 border border-blue-500/20' : 'bg-blue-50 border border-blue-200'
@@ -574,10 +614,8 @@ const MyRequests = () => {
                       </div>
                     )}
 
-                    {/* ============================================= */}
-                    {/* ✅ REJECTION REASON */}
-                    {/* ============================================= */}
-                    {request.rejectionReason && (
+                    {/* Rejection Reason */}
+                    {request.status === 'rejected' && request.supervisorNotes && (
                       <div className={`p-3 rounded-xl ${
                         isDark ? 'bg-rose-500/10 border border-rose-500/20' : 'bg-rose-50 border border-rose-200'
                       }`}>
@@ -586,81 +624,71 @@ const MyRequests = () => {
                           Rejection Reason
                         </p>
                         <p className={`text-sm mt-1 ${isDark ? 'text-rose-300' : 'text-rose-700'}`}>
-                          {request.rejectionReason}
+                          {request.supervisorNotes}
                         </p>
                       </div>
                     )}
 
-                    {/* ============================================= */}
-                    {/* ✅ FINAL PRICE */}
-                    {/* ============================================= */}
-                    {request.finalPrice > 0 && (
-                      <div className={`p-3 rounded-xl ${
-                        isDark ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-emerald-50 border border-emerald-200'
-                      }`}>
-                        <p className={`text-xs font-medium ${isDark ? 'text-emerald-400' : 'text-emerald-700'}`}>
-                          <FiDollarSign className="inline mr-1.5" size={12} />
-                          Final Price
-                        </p>
-                        <p className={`text-sm font-semibold ${isDark ? 'text-emerald-300' : 'text-emerald-700'}`}>
-                          ${request.finalPrice}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* ============================================= */}
-                    {/* ✅ ACTION BUTTONS - Draft Only */}
-                    {/* ============================================= */}
+                    {/* Action Buttons */}
                     <div className="flex flex-wrap gap-2 pt-2">
-                      {request.status === 'draft' && (
-                        <>
-                          <button
-                            onClick={() => {
-                              toast.success('Edit functionality coming soon!');
-                            }}
-                            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
-                              isDark
-                                ? 'bg-white/5 text-emerald-200/60 hover:bg-white/10'
-                                : 'bg-emerald-50 text-emerald-800/60 hover:bg-emerald-100'
-                            }`}
-                          >
-                            <FiEdit2 size={14} />
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => handleSubmit(request._id)}
-                            disabled={isSubmitting}
-                            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
-                              isDark
-                                ? 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30'
-                                : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
-                            } disabled:opacity-50`}
-                          >
-                            {isSubmitting ? (
-                              <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                            ) : (
-                              <FiSend size={14} />
-                            )}
-                            Submit for Review
-                          </button>
-                          <button
-                            onClick={() => handleDelete(request._id)}
-                            disabled={isSubmitting}
-                            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
-                              isDark
-                                ? 'bg-rose-500/10 text-rose-400 hover:bg-rose-500/20'
-                                : 'bg-rose-50 text-rose-600 hover:bg-rose-100'
-                            } disabled:opacity-50`}
-                          >
-                            <FiTrash2 size={14} />
-                            Delete
-                          </button>
-                        </>
+                      {/* ✅ EDIT BUTTON - Now using toast.success instead of toast.info */}
+                      {(request.status === 'pending' || request.status === 'revision_required') && (
+                        <button
+                          onClick={() => {
+                            // Navigate to dashboard with edit mode
+                            toast.success('Redirecting to edit form...');
+                            // Store request data in sessionStorage and redirect
+                            sessionStorage.setItem('editRequestId', request._id);
+                            window.location.href = '/customer/dashboard';
+                          }}
+                          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                            isDark
+                              ? 'bg-white/5 text-emerald-200/60 hover:bg-white/10'
+                              : 'bg-emerald-50 text-emerald-800/60 hover:bg-emerald-100'
+                          }`}
+                        >
+                          <FiEdit2 size={14} />
+                          Edit Request
+                        </button>
+                      )}
+
+                      {/* SUBMIT BUTTON - Only for pending requests */}
+                      {request.status === 'pending' && (
+                        <button
+                          onClick={() => handleSubmit(request._id)}
+                          disabled={isSubmitting}
+                          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                            isDark
+                              ? 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30'
+                              : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
+                          } disabled:opacity-50`}
+                        >
+                          {isSubmitting ? (
+                            <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            <FiSend size={14} />
+                          )}
+                          Submit for Review
+                        </button>
+                      )}
+
+                      {/* DELETE BUTTON - Only for pending requests */}
+                      {request.status === 'pending' && (
+                        <button
+                          onClick={() => handleDelete(request._id)}
+                          disabled={isSubmitting}
+                          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                            isDark
+                              ? 'bg-rose-500/10 text-rose-400 hover:bg-rose-500/20'
+                              : 'bg-rose-50 text-rose-600 hover:bg-rose-100'
+                          } disabled:opacity-50`}
+                        >
+                          <FiTrash2 size={14} />
+                          Cancel Request
+                        </button>
                       )}
                       
-                      {/* ============================================= */}
-                      {/* ✅ STATUS MESSAGES */}
-                      {/* ============================================= */}
+                      {/* Status Messages */}
                       {request.status === 'pending' && (
                         <span className={`text-sm flex items-center gap-2 ${isDark ? 'text-amber-400' : 'text-amber-600'}`}>
                           <FiClock size={16} />
@@ -682,15 +710,10 @@ const MyRequests = () => {
                         </span>
                       )}
                       
-                      {request.status === 'production' && (
+                      {request.status === 'in_production' && (
                         <span className={`text-sm flex items-center gap-2 ${isDark ? 'text-purple-400' : 'text-purple-600'}`}>
                           <FiTrendingUp size={16} />
                           🎬 In production...
-                          {request.productionStartDate && (
-                            <span className={`text-xs ${isDark ? 'text-purple-300/60' : 'text-purple-500/60'}`}>
-                              Started: {format(new Date(request.productionStartDate), 'MMM d, yyyy')}
-                            </span>
-                          )}
                         </span>
                       )}
                       
@@ -698,11 +721,6 @@ const MyRequests = () => {
                         <span className={`text-sm flex items-center gap-2 text-emerald-500`}>
                           <FiCheckCircle size={16} />
                           ✅ Completed! Thank you for your business.
-                          {request.productionEndDate && (
-                            <span className={`text-xs ${isDark ? 'text-emerald-300/60' : 'text-emerald-500/60'}`}>
-                              Completed: {format(new Date(request.productionEndDate), 'MMM d, yyyy')}
-                            </span>
-                          )}
                         </span>
                       )}
                       
@@ -710,6 +728,13 @@ const MyRequests = () => {
                         <span className={`text-sm flex items-center gap-2 text-rose-500`}>
                           <FiXCircle size={16} />
                           ❌ Rejected. Please contact support.
+                        </span>
+                      )}
+
+                      {request.status === 'revision_required' && (
+                        <span className={`text-sm flex items-center gap-2 text-orange-500`}>
+                          <FiMessageSquare size={16} />
+                          🔄 Revision required. Please update and resubmit.
                         </span>
                       )}
                     </div>

@@ -1,46 +1,46 @@
 
 
 import express from 'express';
-import { authenticate, requireSupervisor } from '../../middleware/auth.js';
+import { authenticate, authorize } from '../../middleware/auth.js';
 import {
-  getAllRequests,
-  getRequestDetails,
-  reviewRequest,
-  updateProductionStatus,  // ✅ ADD THIS IMPORT
-  getRequestStats,
+  getAllCustomers,
+  getCustomerById,
+  updateCustomer,
+  toggleCustomerStatus,
+  deleteCustomer,
+  getCustomerStatistics,
+  getCustomerRequests,
+  sendCustomerNotification,
+  exportCustomers,
 } from '../../controllers/admin/adminCustomerController.js';
-import {
-  getAllTemplates,
-  getDefaultTemplate,
-  createTemplate,
-  updateTemplate,
-  deleteTemplate,
-} from '../../controllers/admin/agreementController.js';
 
 const router = express.Router();
 
 // =============================================
-// ALL ROUTES REQUIRE SUPERVISOR AUTHENTICATION
+// ALL ROUTES REQUIRE AUTHENTICATION + ADMIN/SUPERVISOR ROLE
 // =============================================
 router.use(authenticate);
-router.use(requireSupervisor);
+router.use(authorize('admin', 'supervisor'));
 
 // =============================================
-// REQUESTS MANAGEMENT
+// CUSTOMER MANAGEMENT
 // =============================================
-router.get('/advertising', getAllRequests);
-router.get('/advertising/stats', getRequestStats);
-router.get('/advertising/:id', getRequestDetails);
-router.put('/advertising/:id/review', reviewRequest);
-router.put('/advertising/:id/production', updateProductionStatus);  // ✅ ADD THIS ROUTE
+router.get('/customers', getAllCustomers);
+router.get('/customers/statistics', getCustomerStatistics);
+router.get('/customers/export', exportCustomers);
+router.get('/customers/:id', getCustomerById);
+router.put('/customers/:id', updateCustomer);
+router.patch('/customers/:id/toggle', toggleCustomerStatus);
+router.delete('/customers/:id', deleteCustomer);
 
 // =============================================
-// AGREEMENT TEMPLATES
+// CUSTOMER REQUESTS
 // =============================================
-router.get('/agreement/templates', getAllTemplates);
-router.get('/agreement/templates/default', getDefaultTemplate);
-router.post('/agreement/templates', createTemplate);
-router.put('/agreement/templates/:id', updateTemplate);
-router.delete('/agreement/templates/:id', deleteTemplate);
+router.get('/customers/:id/requests', getCustomerRequests);
+
+// =============================================
+// NOTIFICATIONS
+// =============================================
+router.post('/customers/:id/notify', sendCustomerNotification);
 
 export default router;

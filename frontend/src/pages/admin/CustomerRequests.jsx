@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTheme } from '../../context/ThemeContext.jsx';
 import { Helmet } from 'react-helmet-async';
@@ -63,7 +62,8 @@ const CustomerRequests = () => {
       if (filter !== 'all') params.append('status', filter);
       if (searchTerm) params.append('search', searchTerm);
 
-      const response = await api.get(`/admin/customer/advertising?${params}`);
+      // ✅ FIXED: Use correct endpoint - /admin/advertising (not /admin/customer/advertising)
+      const response = await api.get(`/admin/advertising?${params}`);
       if (response.data.success) {
         setRequests(response.data.requests);
         setPagination({
@@ -92,9 +92,11 @@ const CustomerRequests = () => {
 
     setIsSubmitting(true);
     try {
-      const response = await api.put(`/admin/customer/advertising/${requestId}/review`, {
+      // ✅ FIXED: Use correct endpoint - /admin/advertising/:id/review
+      const response = await api.put(`/admin/advertising/${requestId}/review`, {
         action,
         notes: reviewNotes,
+        finalPrice: action === 'approve' ? parseFloat(reviewNotes.match(/\d+\.?\d*/)?.[0] || 0) : undefined,
       });
 
       if (response.data.success) {
@@ -114,12 +116,14 @@ const CustomerRequests = () => {
   const handleProductionUpdate = async (requestId, status) => {
     setIsSubmitting(true);
     try {
-      const response = await api.put(`/admin/customer/advertising/${requestId}/production`, {
-        status: status,
+      // ✅ FIXED: Use correct endpoint - /admin/advertising/:id/production
+      const response = await api.put(`/admin/advertising/${requestId}/production`, {
+        status: status === 'production' ? 'in_production' : status,
       });
 
       if (response.data.success) {
         toast.success(`Production ${status === 'production' ? 'started' : 'completed'} successfully!`);
+        setSelectedRequest(null);
         await loadRequests();
       }
     } catch (error) {
@@ -141,42 +145,39 @@ const CustomerRequests = () => {
 
   const getStatusBadge = (status) => {
     const map = {
-      draft: 'bg-slate-500/20 text-slate-400 border border-slate-500/20',
       pending: 'bg-amber-500/20 text-amber-400 border border-amber-500/20',
       reviewing: 'bg-blue-500/20 text-blue-400 border border-blue-500/20',
       approved: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20',
       rejected: 'bg-rose-500/20 text-rose-400 border border-rose-500/20',
-      production: 'bg-purple-500/20 text-purple-400 border border-purple-500/20',
+      in_production: 'bg-purple-500/20 text-purple-400 border border-purple-500/20',
       completed: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20',
-      cancelled: 'bg-red-500/20 text-red-400 border border-red-500/20',
+      revision_required: 'bg-orange-500/20 text-orange-400 border border-orange-500/20',
     };
     return map[status] || 'bg-slate-500/20 text-slate-400 border border-slate-500/20';
   };
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'draft': return <FiClock className="text-slate-400" />;
       case 'pending': return <FiClock className="text-amber-400" />;
       case 'reviewing': return <FiEye className="text-blue-400" />;
       case 'approved': return <FiCheckCircle className="text-emerald-400" />;
       case 'rejected': return <FiXCircle className="text-rose-400" />;
-      case 'production': return <FiTrendingUp className="text-purple-400" />;
+      case 'in_production': return <FiTrendingUp className="text-purple-400" />;
       case 'completed': return <FiCheckCircle className="text-emerald-400" />;
-      case 'cancelled': return <FiXCircle className="text-red-400" />;
+      case 'revision_required': return <FiMessageSquare className="text-orange-400" />;
       default: return <FiClock className="text-slate-400" />;
     }
   };
 
   const getStatusLabel = (status) => {
     const labels = {
-      draft: 'Draft',
       pending: 'Pending Review',
       reviewing: 'Under Review',
       approved: 'Approved',
       rejected: 'Rejected',
-      production: 'In Production',
+      in_production: 'In Production',
       completed: 'Completed',
-      cancelled: 'Cancelled',
+      revision_required: 'Revision Required',
     };
     return labels[status] || status;
   };
@@ -212,6 +213,21 @@ const CustomerRequests = () => {
       tiktok: '#000000',
     };
     return colors[platform] || '#666';
+  };
+
+  // Get ad type label
+  const getAdTypeLabel = (value) => {
+    const types = {
+      starter_visibility: 'Starter Visibility',
+      growth_partner: 'Growth Partner',
+      strategic_sponsor: 'Strategic Sponsor',
+      business_documentary: 'Business Documentary',
+      embassy_promotion: 'Embassy Promotion',
+      livestream_launch: 'Livestream Launch',
+      studio_rental: 'Studio Rental',
+      digital_ads: 'Digital Ads Boost',
+    };
+    return types[value] || value?.replace('_', ' ').toUpperCase() || 'N/A';
   };
 
   if (loading && requests.length === 0) {
@@ -306,8 +322,9 @@ const CustomerRequests = () => {
               <option value="reviewing">Under Review</option>
               <option value="approved">Approved</option>
               <option value="rejected">Rejected</option>
-              <option value="production">In Production</option>
+              <option value="in_production">In Production</option>
               <option value="completed">Completed</option>
+              <option value="revision_required">Revision Required</option>
             </select>
             <select
               value={pagination.limit}
@@ -364,8 +381,12 @@ const CustomerRequests = () => {
                         ? 'bg-emerald-500/20 text-emerald-400'
                         : request.status === 'pending' || request.status === 'reviewing'
                         ? 'bg-amber-500/20 text-amber-400'
-                        : request.status === 'rejected' || request.status === 'cancelled'
+                        : request.status === 'rejected'
                         ? 'bg-rose-500/20 text-rose-400'
+                        : request.status === 'revision_required'
+                        ? 'bg-orange-500/20 text-orange-400'
+                        : request.status === 'in_production'
+                        ? 'bg-purple-500/20 text-purple-400'
                         : 'bg-slate-500/20 text-slate-400'
                     }`}>
                       {getStatusIcon(request.status)}
@@ -402,9 +423,7 @@ const CustomerRequests = () => {
 
                 {selectedRequest === request._id && (
                   <div className="mt-4 pt-4 border-t border-white/5 space-y-4 animate-slide-down">
-                    {/* ============================================= */}
-                    {/* ✅ COMPANY INFORMATION - FULL DETAILS */}
-                    {/* ============================================= */}
+                    {/* Company Information */}
                     <div>
                       <h4 className={`text-xs font-semibold uppercase tracking-wider mb-2 ${isDark ? 'text-emerald-400' : 'text-emerald-700'}`}>
                         Company Information
@@ -464,9 +483,7 @@ const CustomerRequests = () => {
                       </div>
                     </div>
 
-                    {/* ============================================= */}
-                    {/* ✅ SOCIAL MEDIA - FULL DISPLAY */}
-                    {/* ============================================= */}
+                    {/* Social Media */}
                     {request.socialMedia && Object.values(request.socialMedia).some(v => v) && (
                       <div>
                         <h4 className={`text-xs font-semibold uppercase tracking-wider mb-2 ${isDark ? 'text-emerald-400' : 'text-emerald-700'}`}>
@@ -503,44 +520,18 @@ const CustomerRequests = () => {
                       </div>
                     )}
 
-                    {/* ============================================= */}
-                    {/* ✅ ADVERTISING DETAILS */}
-                    {/* ============================================= */}
+                    {/* Advertising Details */}
                     <div>
                       <h4 className={`text-xs font-semibold uppercase tracking-wider mb-2 ${isDark ? 'text-emerald-400' : 'text-emerald-700'}`}>
                         Advertising Details
                       </h4>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
                         <div>
                           <span className={`block text-xs ${isDark ? 'text-emerald-200/40' : 'text-emerald-800/40'}`}>
-                            Ad Type
+                            Ad Package
                           </span>
                           <span className={isDark ? 'text-white' : 'text-emerald-950'}>
-                            {request.adType?.replace('_', ' ').toUpperCase() || 'N/A'}
-                          </span>
-                        </div>
-                        <div>
-                          <span className={`block text-xs ${isDark ? 'text-emerald-200/40' : 'text-emerald-800/40'}`}>
-                            Package
-                          </span>
-                          <span className={isDark ? 'text-white' : 'text-emerald-950'}>
-                            {request.packageType?.charAt(0).toUpperCase() + request.packageType?.slice(1) || 'N/A'}
-                          </span>
-                        </div>
-                        <div>
-                          <span className={`block text-xs ${isDark ? 'text-emerald-200/40' : 'text-emerald-800/40'}`}>
-                            Duration
-                          </span>
-                          <span className={isDark ? 'text-white' : 'text-emerald-950'}>
-                            {request.duration} weeks
-                          </span>
-                        </div>
-                        <div>
-                          <span className={`block text-xs ${isDark ? 'text-emerald-200/40' : 'text-emerald-800/40'}`}>
-                            Frequency
-                          </span>
-                          <span className={isDark ? 'text-white' : 'text-emerald-950'}>
-                            {request.frequency}
+                            {getAdTypeLabel(request.adType)}
                           </span>
                         </div>
                         <div>
@@ -548,7 +539,7 @@ const CustomerRequests = () => {
                             Budget Range
                           </span>
                           <span className={isDark ? 'text-white' : 'text-emerald-950'}>
-                            ${request.budgetRange?.min || 0} - ${request.budgetRange?.max || 0}
+                            {request.budgetRange?.min || 0} - {request.budgetRange?.max || 0} ETB
                           </span>
                         </div>
                         <div>
@@ -559,15 +550,48 @@ const CustomerRequests = () => {
                             {request.targetAudience?.ageGroup || 'All'}
                           </span>
                         </div>
+                        {request.targetAudience?.location && (
+                          <div>
+                            <span className={`block text-xs ${isDark ? 'text-emerald-200/40' : 'text-emerald-800/40'}`}>
+                              Target Location
+                            </span>
+                            <span className={isDark ? 'text-white' : 'text-emerald-950'}>
+                              {request.targetAudience.location}
+                            </span>
+                          </div>
+                        )}
+                        {request.finalPrice && (
+                          <div>
+                            <span className={`block text-xs ${isDark ? 'text-emerald-200/40' : 'text-emerald-800/40'}`}>
+                              Final Price
+                            </span>
+                            <span className={isDark ? 'text-white' : 'text-emerald-950'}>
+                              {request.finalPrice.toLocaleString()} ETB
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
+
+                    {request.message && (
+                      <div className={`p-3 rounded-xl ${
+                        isDark ? 'bg-white/5' : 'bg-emerald-50/50'
+                      }`}>
+                        <p className={`text-xs font-medium ${isDark ? 'text-emerald-200/40' : 'text-emerald-800/40'}`}>
+                          Customer Message
+                        </p>
+                        <p className={`text-sm ${isDark ? 'text-white' : 'text-emerald-950'}`}>
+                          {request.message}
+                        </p>
+                      </div>
+                    )}
 
                     {request.supervisorNotes && (
                       <div className={`p-3 rounded-xl ${
                         isDark ? 'bg-blue-500/10 border border-blue-500/20' : 'bg-blue-50 border border-blue-200'
                       }`}>
                         <p className={`text-xs font-medium ${isDark ? 'text-blue-400' : 'text-blue-700'}`}>
-                          Previous Notes
+                          Supervisor Notes
                         </p>
                         <p className={`text-sm ${isDark ? 'text-blue-300' : 'text-blue-700'}`}>
                           {request.supervisorNotes}
@@ -575,8 +599,8 @@ const CustomerRequests = () => {
                       </div>
                     )}
 
-                    {/* Review Actions - Only for pending/reviewing requests */}
-                    {(request.status === 'pending' || request.status === 'reviewing') && (
+                    {/* Review Actions - Only for pending requests */}
+                    {(request.status === 'pending') && (
                       <div className={`p-4 rounded-xl border ${
                         isDark ? 'border-white/5 bg-[#032e1d]/40' : 'border-emerald-100/50 bg-white/40'
                       }`}>
@@ -596,27 +620,27 @@ const CustomerRequests = () => {
                           />
                           <div className="flex flex-wrap gap-2">
                             <button
-                              onClick={() => handleReview(request._id, 'reviewing')}
-                              disabled={isSubmitting}
-                              className="px-4 py-2 bg-blue-500/20 text-blue-400 border border-blue-500/20 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-blue-500/30 disabled:opacity-50"
-                            >
-                              <FiEye className="inline mr-1" size={14} />
-                              Mark as Reviewing
-                            </button>
-                            <button
                               onClick={() => handleReview(request._id, 'approve')}
                               disabled={isSubmitting}
-                              className="px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-emerald-500/30 disabled:opacity-50"
+                              className="px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-emerald-500/30 disabled:opacity-50 flex items-center gap-2"
                             >
-                              <FiCheckCircle className="inline mr-1" size={14} />
+                              <FiCheckCircle size={14} />
                               Approve
+                            </button>
+                            <button
+                              onClick={() => handleReview(request._id, 'revision')}
+                              disabled={isSubmitting}
+                              className="px-4 py-2 bg-orange-500/20 text-orange-400 border border-orange-500/20 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-orange-500/30 disabled:opacity-50 flex items-center gap-2"
+                            >
+                              <FiMessageSquare size={14} />
+                              Request Revision
                             </button>
                             <button
                               onClick={() => handleReview(request._id, 'reject')}
                               disabled={isSubmitting}
-                              className="px-4 py-2 bg-rose-500/20 text-rose-400 border border-rose-500/20 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-rose-500/30 disabled:opacity-50"
+                              className="px-4 py-2 bg-rose-500/20 text-rose-400 border border-rose-500/20 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-rose-500/30 disabled:opacity-50 flex items-center gap-2"
                             >
-                              <FiXCircle className="inline mr-1" size={14} />
+                              <FiXCircle size={14} />
                               Reject
                             </button>
                           </div>
@@ -624,7 +648,7 @@ const CustomerRequests = () => {
                       </div>
                     )}
 
-                    {/* Production Status Update */}
+                    {/* Production Status Update - Only for approved requests */}
                     {request.status === 'approved' && (
                       <div className={`p-4 rounded-xl border ${
                         isDark ? 'border-white/5 bg-[#032e1d]/40' : 'border-emerald-100/50 bg-white/40'
@@ -645,24 +669,12 @@ const CustomerRequests = () => {
                             )}
                             Start Production
                           </button>
-                          <button
-                            onClick={() => handleProductionUpdate(request._id, 'completed')}
-                            disabled={isSubmitting}
-                            className="px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-emerald-500/30 disabled:opacity-50 flex items-center gap-2"
-                          >
-                            {isSubmitting ? (
-                              <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                            ) : (
-                              <FiCheckCircle size={14} />
-                            )}
-                            Complete Production
-                          </button>
                         </div>
                       </div>
                     )}
 
-                    {/* Production status display */}
-                    {request.status === 'production' && (
+                    {/* In Production Display */}
+                    {request.status === 'in_production' && (
                       <div className={`p-4 rounded-xl border ${
                         isDark ? 'border-purple-500/20 bg-purple-500/10' : 'border-purple-200 bg-purple-50'
                       }`}>
@@ -675,11 +687,6 @@ const CustomerRequests = () => {
                             <p className={`text-xs ${isDark ? 'text-purple-300/60' : 'text-purple-600/70'}`}>
                               Production is currently in progress
                             </p>
-                            {request.productionStartDate && (
-                              <p className={`text-xs mt-1 ${isDark ? 'text-purple-300/50' : 'text-purple-600/50'}`}>
-                                Started: {format(new Date(request.productionStartDate), 'MMM d, yyyy')}
-                              </p>
-                            )}
                           </div>
                         </div>
                         <div className="mt-3 flex flex-wrap gap-2">
@@ -699,6 +706,7 @@ const CustomerRequests = () => {
                       </div>
                     )}
 
+                    {/* Completed Display */}
                     {request.status === 'completed' && (
                       <div className={`p-4 rounded-xl border ${
                         isDark ? 'border-emerald-500/20 bg-emerald-500/10' : 'border-emerald-200 bg-emerald-50'
@@ -712,16 +720,12 @@ const CustomerRequests = () => {
                             <p className={`text-xs ${isDark ? 'text-emerald-300/60' : 'text-emerald-600/70'}`}>
                               This request has been completed
                             </p>
-                            {request.productionEndDate && (
-                              <p className={`text-xs mt-1 ${isDark ? 'text-emerald-300/50' : 'text-emerald-600/50'}`}>
-                                Completed: {format(new Date(request.productionEndDate), 'MMM d, yyyy')}
-                              </p>
-                            )}
                           </div>
                         </div>
                       </div>
                     )}
 
+                    {/* Rejected Display */}
                     {request.status === 'rejected' && (
                       <div className={`p-4 rounded-xl border ${
                         isDark ? 'border-rose-500/20 bg-rose-500/10' : 'border-rose-200 bg-rose-50'
@@ -732,9 +736,9 @@ const CustomerRequests = () => {
                             <p className={`text-sm font-medium ${isDark ? 'text-rose-400' : 'text-rose-700'}`}>
                               ❌ Request Rejected
                             </p>
-                            {request.rejectionReason && (
+                            {request.supervisorNotes && (
                               <p className={`text-xs mt-1 ${isDark ? 'text-rose-300/60' : 'text-rose-600/70'}`}>
-                                Reason: {request.rejectionReason}
+                                Reason: {request.supervisorNotes}
                               </p>
                             )}
                           </div>
