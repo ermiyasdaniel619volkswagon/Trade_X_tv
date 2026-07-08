@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /customer/dashboard
+
+Sitemap: https://tradex-frontend-eight.vercel.app/sitemap.xml
