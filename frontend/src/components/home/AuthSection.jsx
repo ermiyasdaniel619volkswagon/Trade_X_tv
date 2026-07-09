@@ -333,9 +333,7 @@ const AuthSection = ({ isVisible, onClose }) => {
 
                   {/* Demo Credentials */}
                   <div className="text-center mt-4">
-                    <p className={`text-[10px] ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>
-                      Demo: admin@tradetv.com / Admin@123456
-                    </p>
+                   
                   </div>
                 </div>
 
