@@ -158,16 +158,16 @@ const VideoCard = ({
           <h4 className="font-black text-sm sm:text-base text-white tracking-wide uppercase line-clamp-1 mb-1 drop-shadow-md">
             {title || 'UNTITLED BROADCAST'}
           </h4>
-          
+              
           <div className="flex items-center gap-2">
-            <span className="text-[9px] font-black text-white uppercase tracking-widest px-1.5 py-0.5" style={{ backgroundColor: BRAND.maroon }}>
+            {/*<span className="text-[9px] font-black text-white uppercase tracking-widest px-1.5 py-0.5" style={{ backgroundColor: BRAND.maroon }}>
               {channelName || 'TRADEX'}
-            </span>
-            {views !== undefined && (
+            </span>*/}
+            {/* {views !== undefined && (
               <span className="text-[9px] font-bold text-zinc-300 flex items-center gap-1 uppercase tracking-wider">
                 <FiEye size={10} /> {formatViews(views)}
               </span>
-            )}
+            )} */}
           </div>
         </div>
       </div>
