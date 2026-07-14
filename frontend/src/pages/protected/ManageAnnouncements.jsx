@@ -313,7 +313,7 @@ const ManageAnnouncements = () => {
   return (
     <>
       <Helmet>
-        <title>Manage Announcements - TradeExTV</title>
+        <title>Manage Announcements - Tradex TV</title>
       </Helmet>
 
       <div className="space-y-6">

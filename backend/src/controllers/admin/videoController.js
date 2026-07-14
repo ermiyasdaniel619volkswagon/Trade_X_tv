@@ -116,12 +116,12 @@ export const createVideo = async (req, res) => {
       const fetchedData = await fetchYouTubeVideoData(finalVideoId);
       if (fetchedData.success) {
         videoData.title = fetchedData.title || 'Untitled Video';
-        videoData.channel = fetchedData.channel || 'TradeExTV Official';
+        videoData.channel = fetchedData.channel || 'Tradex TV Official';
         videoData.duration = fetchedData.duration || '0:00';
         videoData.views = fetchedData.views || 0;
       } else {
         videoData.title = title || 'Untitled Video';
-        videoData.channel = channel || 'TradeExTV Official';
+        videoData.channel = channel || 'Tradex TV Official';
         videoData.duration = duration || '0:00';
         videoData.views = 0;
       }

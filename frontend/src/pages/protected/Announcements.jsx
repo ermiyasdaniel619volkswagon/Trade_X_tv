@@ -151,7 +151,7 @@ const Announcements = () => {
   return (
     <>
       <Helmet>
-        <title>Announcements - TradeExTV</title>
+        <title>Announcements - Tradex TV</title>
       </Helmet>
 
       <div className="space-y-6">

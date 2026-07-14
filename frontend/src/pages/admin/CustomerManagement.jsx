@@ -402,7 +402,7 @@ const CustomerManagement = () => {
   return (
     <>
       <Helmet>
-        <title>Customer Management - TradeExTV Admin</title>
+        <title>Customer Management - Tradex TV Admin</title>
       </Helmet>
 
       <div className="space-y-6">

@@ -199,7 +199,7 @@ const ManageVideos = () => {
   return (
     <>
       <Helmet>
-        <title>Manage Videos - TradeExTV</title>
+        <title>Manage Videos - Tradex TV</title>
       </Helmet>
 
       <div className="space-y-6">

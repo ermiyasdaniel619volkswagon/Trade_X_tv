@@ -136,8 +136,8 @@ const News = ({ isHomePage = false }) => {
       }}
     >
       <Helmet>
-        <title>Latest News - TradeExTV</title>
-        <meta name="description" content="Stay updated with the latest news and updates from TradeExTV" />
+        <title>Latest News - Tradex TV</title>
+        <meta name="description" content="Stay updated with the latest news and updates from Tradex TV" />
       </Helmet>
 
       <style>{`
@@ -184,7 +184,7 @@ const News = ({ isHomePage = false }) => {
           </h1>
           <div className="flex gap-4 items-baseline">
             <span className="hidden md:block font-sans text-xs md:text-sm tracking-widest font-black uppercase" style={{ color: BRAND.maroon }}>
-              Dispatches from TradeExTV
+              Dispatches from Tradex TV
             </span>
           </div>
         </div>
@@ -397,7 +397,7 @@ const News = ({ isHomePage = false }) => {
                    }}>
                 <span className="font-bold">{formatDate(selectedNews.date)}</span>
                 <span style={{ color: BRAND.maroon }}>•</span>
-                <span className="uppercase tracking-widest font-bold text-xs">TradeExTV Desk</span>
+                <span className="uppercase tracking-widest font-bold text-xs">Tradex TV Desk</span>
               </div>
               
               <div 

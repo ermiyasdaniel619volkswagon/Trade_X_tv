@@ -89,7 +89,7 @@ const MyHistory = () => {
   return (
     <>
       <Helmet>
-        <title>My History - TradeExTV</title>
+        <title>My History - Tradex TV</title>
       </Helmet>
 
       <div className="space-y-6">

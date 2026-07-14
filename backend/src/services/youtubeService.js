@@ -6,7 +6,7 @@ export const fetchYouTubeVideoData = async (videoId) => {
     const oembedResponse = await axios.get(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`);
     
     const title = oembedResponse.data.title || 'Untitled Video';
-    const channel = oembedResponse.data.author_name || 'TradeExTV Official';
+    const channel = oembedResponse.data.author_name || 'Tradex TV Official';
     const thumbnail = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
     
     let duration = '0:00';
@@ -24,7 +24,7 @@ export const fetchYouTubeVideoData = async (videoId) => {
     console.error(`Failed to fetch data for video ${videoId}:`, error.message);
     return {
       title: null,
-      channel: 'TradeExTV Official',
+      channel: 'Tradex TV Official',
       thumbnail: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
       duration: '0:00',
       views: 0,

@@ -236,7 +236,7 @@ const DailyReport = () => {
   return (
     <>
       <Helmet>
-        <title>Daily Report - TradeExTV</title>
+        <title>Daily Report - Tradex TV</title>
       </Helmet>
 
       <div className="space-y-6">

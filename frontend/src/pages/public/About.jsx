@@ -90,8 +90,8 @@ const About = ({ isHomePage = false }) => {
   return (
     <>
       <Helmet>
-        <title>About - TradeExTV</title>
-        <meta name="description" content="Learn about TradeExTV - leading business media production company." />
+        <title>About - Tradex TV</title>
+        <meta name="description" content="Learn about Tradex TV - leading business media production company." />
       </Helmet>
 
       <div className="max-w-6xl mx-auto">
@@ -100,7 +100,7 @@ const About = ({ isHomePage = false }) => {
           <div className="flex items-center gap-3 mb-2">
             <div className="w-1 h-10" style={{ backgroundColor: BRAND.navy }} />
             <h1 className="text-4xl md:text-5xl font-bold" style={{ color: colors.text }}>
-              About <span style={{ color: BRAND.gold }}>TradeExTV</span>
+              About <span style={{ color: BRAND.gold }}>Tradex TV</span>
             </h1>
           </div>
           <div className="flex items-center gap-4 ml-4">

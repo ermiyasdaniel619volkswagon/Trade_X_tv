@@ -137,7 +137,7 @@ const ReviewPipeline = () => {
   return (
     <>
       <Helmet>
-        <title>Review Pipeline - TradeExTV</title>
+        <title>Review Pipeline - Tradex TV</title>
       </Helmet>
 
       <div className="space-y-6">

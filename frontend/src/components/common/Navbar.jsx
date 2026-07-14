@@ -252,7 +252,7 @@ const Navbar = () => {
           >
             <motion.img 
               src={logoSrc} 
-              alt="TradeExTV" 
+              alt="Tradex TV" 
               className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto object-contain transition-all duration-500 group-hover:scale-105"
               whileHover={{ rotate: [-1, 1, -1, 0], transition: { duration: 0.5 } }}
             />

@@ -51,7 +51,7 @@ const DEFAULT_HERO_SLIDES = [
   },
   {
     id: 3,
-    title: 'TradeExTV Live',
+    title: 'Tradex TV Live',
     description: 'Experience premium media production and broadcasting at its finest.',
     image: hero3,
     badge: 'Premium',
@@ -247,7 +247,7 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>TradeExTV - Premium Media Production</title>
+        <title>Tradex TV - Premium Media Production</title>
         <meta
           name="description"
           content="Professional media production, broadcasting, and content creation services."
@@ -329,7 +329,7 @@ const Home = () => {
                       isDark ? 'text-gray-300' : 'text-gray-600'
                     }`}
                   >
-                    Join TradeExTV today and showcase your business to thousands of viewers. Get started with our premium advertising packages designed for businesses like yours.
+                    Join Tradex TV today and showcase your business to thousands of viewers. Get started with our premium advertising packages designed for businesses like yours.
                   </motion.p>
 
                   <motion.div
