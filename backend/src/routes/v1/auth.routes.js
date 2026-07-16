@@ -43,22 +43,28 @@ import {
   googleAuthCustomer 
 } from '../../controllers/auth/googleAuthController.js';
 import { authenticate } from '../../middleware/auth.js';
+import {
+  authLimiter,
+  registrationLimiter,
+  staffRegistrationLimiter,
+  oauthLimiter,
+} from '../../middleware/rateLimiter.js';
 
 const router = express.Router();
 
 // =============================================
 // PUBLIC ROUTES (No authentication required)
 // =============================================
-router.post('/login', login);
-router.post('/register', register);
-router.post('/register/customer', registerCustomer);
+router.post('/login', authLimiter, login);
+router.post('/register', staffRegistrationLimiter, register);
+router.post('/register/customer', registrationLimiter, registerCustomer);
 router.post('/refresh', refreshToken);
 
 // =============================================
 // ✅ GOOGLE AUTH ROUTES - ADDED
 // =============================================
-router.post('/google', googleAuth);
-router.post('/google/customer', googleAuthCustomer);
+router.post('/google', oauthLimiter, googleAuth);
+router.post('/google/customer', oauthLimiter, googleAuthCustomer);
 
 // =============================================
 // PROTECTED ROUTES (Authentication required)

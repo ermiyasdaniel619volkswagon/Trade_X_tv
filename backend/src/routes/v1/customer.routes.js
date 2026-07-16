@@ -170,6 +170,7 @@
 // export default router;
 import express from 'express';
 import { authenticate } from '../../middleware/auth.js';
+import { advertisingRequestLimiter } from '../../middleware/rateLimiter.js';
 import {
   createRequest,
   getMyRequests,
@@ -197,11 +198,11 @@ router.put('/profile', updateProfile);
 // =============================================
 // ADVERTISING REQUESTS
 // =============================================
-router.post('/advertising', createRequest);
+router.post('/advertising', advertisingRequestLimiter, createRequest);
 router.get('/advertising', getMyRequests);
 router.get('/advertising/:id', getRequestById);
 router.put('/advertising/:id', updateRequest);
 router.delete('/advertising/:id', deleteRequest);
-router.post('/advertising/:id/submit', submitRequest);
+router.post('/advertising/:id/submit', advertisingRequestLimiter, submitRequest);
 
 export default router;

@@ -3,6 +3,10 @@ import express from 'express';
 import { authenticate } from '../../middleware/auth.js';
 import Notification from '../../models/Notification.js';
 import { cleanupOldNotifications } from '../../services/cleanupService.js';
+import {
+  notificationLimiter,
+  cleanupLimiter,
+} from '../../middleware/rateLimiter.js';
 
 const router = express.Router();
 
@@ -262,7 +266,7 @@ router.put('/:id/delete-preference', async (req, res) => {
 // =============================================
 // POST - Create a new notification
 // =============================================
-router.post('/', async (req, res) => {
+router.post('/', notificationLimiter, async (req, res) => {
   try {
     const { title, message, priority, type, targetAudience, targetUsers, expiresAt, deleteAfter } = req.body;
     const sentBy = req.userId;
@@ -402,7 +406,7 @@ router.delete('/:id', async (req, res) => {
 // =============================================
 // POST - Manually trigger cleanup (admin only)
 // =============================================
-router.post('/cleanup', async (req, res) => {
+router.post('/cleanup', cleanupLimiter, async (req, res) => {
   try {
     const user = req.user;
     if (user.role !== 'supervisor') {

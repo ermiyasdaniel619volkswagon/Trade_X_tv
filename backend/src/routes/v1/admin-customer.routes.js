@@ -13,6 +13,10 @@ import {
   sendCustomerNotification,
   exportCustomers,
 } from '../../controllers/admin/adminCustomerController.js';
+import {
+  notificationLimiter,
+  userManagementLimiter,
+} from '../../middleware/rateLimiter.js';
 
 const router = express.Router();
 
@@ -29,9 +33,9 @@ router.get('/customers', getAllCustomers);
 router.get('/customers/statistics', getCustomerStatistics);
 router.get('/customers/export', exportCustomers);
 router.get('/customers/:id', getCustomerById);
-router.put('/customers/:id', updateCustomer);
-router.patch('/customers/:id/toggle', toggleCustomerStatus);
-router.delete('/customers/:id', deleteCustomer);
+router.put('/customers/:id', userManagementLimiter, updateCustomer);
+router.patch('/customers/:id/toggle', userManagementLimiter, toggleCustomerStatus);
+router.delete('/customers/:id', userManagementLimiter, deleteCustomer);
 
 // =============================================
 // CUSTOMER REQUESTS
@@ -41,6 +45,6 @@ router.get('/customers/:id/requests', getCustomerRequests);
 // =============================================
 // NOTIFICATIONS
 // =============================================
-router.post('/customers/:id/notify', sendCustomerNotification);
+router.post('/customers/:id/notify', notificationLimiter, sendCustomerNotification);
 
 export default router;

@@ -14,6 +14,7 @@ import {
   refreshVideoData,
   incrementVideoViews,
 } from '../../controllers/admin/videoController.js';
+import { videoRefreshLimiter } from '../../middleware/rateLimiter.js';
 
 const router = express.Router();
 
@@ -37,6 +38,6 @@ router.delete('/:id', deleteVideo);
 router.post('/reorder', reorderVideos);
 router.put('/:id/toggle-featured', toggleFeatured);
 router.put('/:id/toggle-active', toggleActive);
-router.post('/:id/refresh', refreshVideoData);
+router.post('/:id/refresh', videoRefreshLimiter, refreshVideoData);
 
 export default router;

@@ -228,12 +228,14 @@ function App() {
           <AuthProvider>
             <Toaster
               position="top-right"
+              containerStyle={{ zIndex: 99999 }}
               toastOptions={{
                 duration: 4000,
                 style: {
                   borderRadius: '10px',
                   background: '#333',
                   color: '#fff',
+                  zIndex: 99999,
                 },
                 success: {
                   iconTheme: {

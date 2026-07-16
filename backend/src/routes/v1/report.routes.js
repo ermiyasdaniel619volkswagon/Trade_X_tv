@@ -9,12 +9,13 @@ import {
   deleteReport
 } from '../../controllers/report/reportController.js';
 import { authenticate } from '../../middleware/auth.js';
+import { reportLimiter } from '../../middleware/rateLimiter.js';
 
 const router = express.Router();
 
 router.use(authenticate);
 
-router.post('/', createReport);
+router.post('/', reportLimiter, createReport);
 router.get('/my', getMyReports);
 router.get('/today', getTodayReport);
 router.get('/stats', getStats);

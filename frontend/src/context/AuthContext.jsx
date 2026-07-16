@@ -125,7 +125,11 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       const message = error.response?.data?.error || 'Login failed. Please try again.';
       toast.error(message);
-      return { success: false, error: message };
+      return {
+        success: false,
+        error: message,
+        retryAfter: Number(error.response?.data?.retryAfter) || 0,
+      };
     }
   }, [navigate, loadUnreadNotifications]);
 

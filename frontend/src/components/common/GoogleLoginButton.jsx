@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
-import { useAuth } from '../../context/AuthContext.jsx';
 import { useTheme } from '../../context/ThemeContext.jsx';
 import toast from 'react-hot-toast';
 import { FiLoader } from 'react-icons/fi';
@@ -14,7 +13,6 @@ const GoogleLoginButton = ({
   onSuccess = null,
   onError = null,
 }) => {
-  const { login } = useAuth();
   const { isDark } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -49,8 +47,6 @@ const GoogleLoginButton = ({
       if (data.success) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-        
-        await login(data.user.email, '');
         
         window.location.href = data.redirectUrl || '/';
         

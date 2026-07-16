@@ -1169,6 +1169,7 @@ const corsOptions = {
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  exposedHeaders: ['RateLimit', 'RateLimit-Policy', 'Retry-After'],
 };
 
 app.use(cors(corsOptions));

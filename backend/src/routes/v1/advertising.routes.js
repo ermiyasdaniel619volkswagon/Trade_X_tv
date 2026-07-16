@@ -7,6 +7,7 @@ import {
   updateProductionStatus,
   getRequestStats,
 } from '../../controllers/admin/adminController.js';
+import { adminWorkflowLimiter } from '../../middleware/rateLimiter.js';
 
 const router = express.Router();
 
@@ -30,9 +31,9 @@ router.get('/advertising/stats', getRequestStats);
 router.get('/advertising/:id', getRequestDetails);
 
 // Review request (approve/reject/revision)
-router.put('/advertising/:id/review', reviewRequest);
+router.put('/advertising/:id/review', adminWorkflowLimiter, reviewRequest);
 
 // Update production status
-router.put('/advertising/:id/production', updateProductionStatus);
+router.put('/advertising/:id/production', adminWorkflowLimiter, updateProductionStatus);
 
 export default router;

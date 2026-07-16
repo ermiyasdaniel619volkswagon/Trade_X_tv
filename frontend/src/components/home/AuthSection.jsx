@@ -375,7 +375,7 @@ import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FiMail, FiLock, FiEye, FiEyeOff, FiBriefcase, 
-  FiUser, FiCheckCircle, FiX, FiArrowRight
+  FiUser, FiCheckCircle, FiX, FiArrowRight, FiInfo
 } from 'react-icons/fi';
 import api from '../../services/api.js';
 import GoogleLoginButton from '../common/GoogleLoginButton.jsx'; // ✅ ADDED
@@ -400,6 +400,8 @@ const AuthSection = ({ isVisible, onClose }) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+  const [formError, setFormError] = useState('');
+  const [lockoutSeconds, setLockoutSeconds] = useState(0);
 
   const isLoginMode = mode === 'login';
 
@@ -411,12 +413,24 @@ const AuthSection = ({ isVisible, onClose }) => {
         confirmPassword: '',
       });
       setErrors({});
+      setFormError('');
+      setLockoutSeconds(0);
     }
   }, [isVisible]);
+
+  useEffect(() => {
+    if (lockoutSeconds <= 0) return undefined;
+    const timer = window.setInterval(() => {
+      setLockoutSeconds((seconds) => Math.max(0, seconds - 1));
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [lockoutSeconds]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    setFormError('');
+    setLockoutSeconds(0);
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -440,7 +454,15 @@ const AuthSection = ({ isVisible, onClose }) => {
     }
     
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    const firstError = Object.values(newErrors)[0] || '';
+    setFormError(firstError);
+
+    if (firstError) {
+      toast.error(firstError);
+      return false;
+    }
+
+    return true;
   };
 
   const handleSubmit = async (e) => {
@@ -454,6 +476,9 @@ const AuthSection = ({ isVisible, onClose }) => {
         const result = await login(formData.email, formData.password);
         if (result.success) {
           if (onClose) onClose();
+        } else {
+          setFormError(result.error || 'Incorrect email or password. Please try again.');
+          setLockoutSeconds(Number(result.retryAfter) || 0);
         }
       } else {
         const response = await api.post('/auth/register/customer', {
@@ -471,12 +496,16 @@ const AuthSection = ({ isVisible, onClose }) => {
             confirmPassword: '' 
           }));
           setErrors({});
+          setFormError('');
         } else {
-          toast.error(response.data.error || 'Registration failed');
+          const message = response.data.error || 'Registration failed. Please check your details and try again.';
+          setFormError(message);
+          toast.error(message);
         }
       }
     } catch (error) {
       const errorMsg = error.response?.data?.error || 'Something went wrong. Please try again.';
+      setFormError(errorMsg);
       toast.error(errorMsg);
     } finally {
       setIsSubmitting(false);
@@ -491,6 +520,8 @@ const AuthSection = ({ isVisible, onClose }) => {
       confirmPassword: '' 
     }));
     setErrors({});
+    setFormError('');
+    setLockoutSeconds(0);
   };
 
   return (
@@ -552,6 +583,28 @@ const AuthSection = ({ isVisible, onClose }) => {
                     }`}>
                       <FiBriefcase className="inline mr-2" size={16} />
                       Create your customer account with email and password
+                    </div>
+                  )}
+
+                  {formError && (
+                    <div
+                      role="alert"
+                      aria-live="assertive"
+                      className={`mb-4 flex items-start gap-2 rounded-xl border px-3 py-3 text-sm ${
+                        isDark
+                          ? 'border-rose-500/30 bg-rose-500/10 text-rose-200'
+                          : 'border-rose-200 bg-rose-50 text-rose-700'
+                      }`}
+                    >
+                      <FiInfo className="mt-0.5 shrink-0" size={17} />
+                      <span>
+                        {formError}
+                        {lockoutSeconds > 0 && (
+                          <span className="block mt-1 font-semibold">
+                            Try again in {Math.floor(lockoutSeconds / 60)}:{String(lockoutSeconds % 60).padStart(2, '0')}.
+                          </span>
+                        )}
+                      </span>
                     </div>
                   )}
 
@@ -667,7 +720,7 @@ const AuthSection = ({ isVisible, onClose }) => {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       type="submit"
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || lockoutSeconds > 0}
                       className="w-full py-3.5 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{
                         background: `linear-gradient(135deg, ${BRAND.navy}, ${BRAND.maroon})`,
