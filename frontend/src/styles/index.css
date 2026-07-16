@@ -13,41 +13,54 @@
   body {
     @apply bg-zinc-950 text-white transition-colors duration-300;
     font-family: 'Inter', system-ui, sans-serif;
+    background-image:
+      radial-gradient(circle at 8% 12%, rgba(26, 50, 88, 0.16), transparent 28%),
+      radial-gradient(circle at 92% 18%, rgba(165, 61, 50, 0.12), transparent 26%),
+      radial-gradient(circle at 50% 100%, rgba(182, 159, 96, 0.10), transparent 34%);
+    background-attachment: fixed;
+  }
+
+  html:not(.dark) body {
+    @apply bg-white text-[#1A3258];
+    background-image:
+      radial-gradient(circle at 8% 12%, rgba(26, 50, 88, 0.08), transparent 28%),
+      radial-gradient(circle at 92% 18%, rgba(165, 61, 50, 0.07), transparent 26%),
+      radial-gradient(circle at 50% 100%, rgba(182, 159, 96, 0.12), transparent 34%);
   }
 
   /* ============================================= */
   /* DARK MODE - Brighter Gray Theme */
   /* ============================================= */
   .dark {
-    --bg-primary: #1a1a1a;
-    --bg-secondary: #242424;
-    --bg-card: #2a2a2a;
-    --bg-card-hover: #333333;
-    --bg-input: #2a2a2a;
-    --bg-navbar: #1a1a1a;
-    --bg-sidebar: #1a1a1a;
-    --text-primary: #f0f0f0;
-    --text-secondary: #b0b0b0;
-    --text-muted: #808080;
-    --border-color: #3a3a3a;
-    --border-light: #4a4a4a;
+    --bg-primary: #101d33;
+    --bg-secondary: #162844;
+    --bg-card: #1a3258;
+    --bg-card-hover: #24436f;
+    --bg-input: #162844;
+    --bg-navbar: #101d33;
+    --bg-sidebar: #101d33;
+    --text-primary: #ffffff;
+    --text-secondary: #e8e1cf;
+    --text-muted: #c6b98f;
+    --border-color: rgba(182, 159, 96, 0.35);
+    --border-light: rgba(182, 159, 96, 0.55);
     --shadow-color: rgba(0, 0, 0, 0.4);
   }
 
   /* Light mode variables */
   :root {
     --bg-primary: #ffffff;
-    --bg-secondary: #f5f5f0;
+    --bg-secondary: #fbf9f3;
     --bg-card: #ffffff;
-    --bg-card-hover: #f0f0eb;
-    --bg-input: #f5f5f0;
+    --bg-card-hover: #f3edda;
+    --bg-input: #fbf9f3;
     --bg-navbar: #ffffff;
     --bg-sidebar: #ffffff;
-    --text-primary: #1a1a1a;
-    --text-secondary: #6b6b6b;
-    --text-muted: #a0a0a0;
-    --border-color: #e8e8e0;
-    --border-light: #d0d0c8;
+    --text-primary: #1A3258;
+    --text-secondary: #4b4b4b;
+    --text-muted: #756f61;
+    --border-color: rgba(26, 50, 88, 0.16);
+    --border-light: rgba(182, 159, 96, 0.55);
     --shadow-color: rgba(0, 0, 0, 0.05);
   }
 
@@ -56,19 +69,40 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-zinc-800/50 rounded-full;
+    @apply bg-[#1A3258]/20 rounded-full;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-emerald-500/50 rounded-full;
+    @apply bg-[#B69F60]/70 rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-emerald-400;
+    @apply bg-[#A53D32];
   }
 }
 
 @layer utilities {
+  /* Consistent, high-contrast form controls in both themes. */
+  input, textarea, select {
+    color: #1A3258 !important;
+    background-color: #FFFFFF !important;
+    border-color: rgba(26, 50, 88, 0.28) !important;
+  }
+  input::placeholder, textarea::placeholder { color: rgba(26, 50, 88, 0.58) !important; }
+  input:focus, textarea:focus, select:focus {
+    border-color: #B69F60 !important;
+    box-shadow: 0 0 0 3px rgba(182, 159, 96, 0.28) !important;
+    outline: none !important;
+  }
+  .dark input, .dark textarea, .dark select {
+    color: #FFFFFF !important;
+    background-color: #162844 !important;
+    border-color: rgba(182, 159, 96, 0.5) !important;
+  }
+  .dark input::placeholder, .dark textarea::placeholder { color: rgba(255, 255, 255, 0.62) !important; }
+  label { color: #1A3258; }
+  .dark label { color: rgba(255, 255, 255, 0.88); }
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
@@ -88,12 +122,12 @@
   }
   
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: rgba(16, 185, 129, 0.4);
+    background: rgba(182, 159, 96, 0.5);
     border-radius: 2px;
   }
   
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: rgba(16, 185, 129, 0.6);
+    background: rgba(165, 61, 50, 0.7);
   }
 
   .animate-pulse-soft {
@@ -142,13 +176,48 @@
   .card {
     @apply bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] p-6 transition-all duration-300;
   }
+
+  .brand-led {
+    position: relative;
+    isolation: isolate;
+    box-shadow:
+      0 0 0 1px rgba(182, 159, 96, 0.18),
+      0 12px 40px rgba(26, 50, 88, 0.18);
+  }
+
+  .brand-led-ambient {
+    background:
+      radial-gradient(circle at 8% 14%, rgba(26, 50, 88, 0.22), transparent 25%),
+      radial-gradient(circle at 92% 20%, rgba(165, 61, 50, 0.18), transparent 24%),
+      radial-gradient(circle at 55% 92%, rgba(182, 159, 96, 0.14), transparent 30%);
+    mix-blend-mode: screen;
+    opacity: 0.85;
+  }
+
+  .dark .brand-led-ambient { opacity: 0.9; }
+
+  .brand-led::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(120deg, #1A3258, #B69F60, #A53D32, #1A3258);
+    background-size: 240% 240%;
+    animation: brandLedFlow 9s ease-in-out infinite;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
   
   .card-hover {
-    @apply hover:border-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/10 hover:scale-[1.02] transition-all duration-500;
+    @apply hover:border-[#B69F60]/60 hover:shadow-xl hover:shadow-[#1A3258]/20 hover:scale-[1.02] transition-all duration-500;
   }
 
   .btn-primary {
-    @apply px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply px-6 py-2.5 bg-[#A53D32] hover:bg-[#1A3258] active:bg-[#B69F60] text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
@@ -156,7 +225,7 @@
   }
 
   .input-field {
-    @apply w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 text-white placeholder-zinc-500;
+    @apply w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#B69F60] focus:border-transparent transition-all duration-300 text-white placeholder-white/50;
   }
 
   .status-badge {
@@ -164,20 +233,57 @@
   }
 
   .status-pending {
-    @apply bg-amber-500/20 text-amber-400 border border-amber-500/20;
+    @apply bg-[#B69F60]/20 text-[#B69F60] border border-[#B69F60]/40;
   }
 
   .status-approved {
-    @apply bg-emerald-500/20 text-emerald-400 border border-emerald-500/20;
+    @apply bg-[#1A3258]/20 text-[#1A3258] border border-[#1A3258]/30;
   }
 
   .status-revision {
-    @apply bg-rose-500/20 text-rose-400 border border-rose-500/20;
+    @apply bg-[#A53D32]/20 text-[#A53D32] border border-[#A53D32]/30;
   }
 
   .status-rejected {
-    @apply bg-red-500/20 text-red-400 border border-red-500/20;
+    @apply bg-[#A53D32]/20 text-[#A53D32] border border-[#A53D32]/40;
   }
+}
+
+@keyframes brandLedFlow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Brand palette bridge for legacy utility classes.
+   Some screens still use emerald utility names directly. These selectors
+   restyle those existing classes without changing component behavior. */
+@layer utilities {
+  [class*="bg-emerald-"] { background-color: rgba(26, 50, 88, 0.12) !important; }
+  [class*="text-emerald-"] { color: #1A3258 !important; }
+  [class*="border-emerald-"] { border-color: rgba(182, 159, 96, 0.45) !important; }
+  [class*="ring-emerald-"] { --tw-ring-color: rgba(182, 159, 96, 0.65) !important; }
+  [class*="shadow-emerald-"] { --tw-shadow-color: rgba(26, 50, 88, 0.2) !important; }
+  [class*="placeholder-emerald-"]::placeholder { color: rgba(26, 50, 88, 0.5) !important; }
+  [class*="from-emerald-"] { --tw-gradient-from: #1A3258 var(--tw-gradient-from-position) !important; }
+  [class*="to-emerald-"] { --tw-gradient-to: #A53D32 var(--tw-gradient-to-position) !important; }
+  [class*="via-emerald-"] { --tw-gradient-via: #B69F60 var(--tw-gradient-via-position) !important; }
+
+  [class*="hover:bg-emerald-"]:hover { background-color: rgba(165, 61, 50, 0.16) !important; }
+  [class*="hover:text-emerald-"]:hover { color: #A53D32 !important; }
+  [class*="hover:border-emerald-"]:hover { border-color: rgba(182, 159, 96, 0.7) !important; }
+
+  /* Navy is intentionally replaced by light gold/white in dark mode so
+     brand accents remain readable against navy/black surfaces. */
+  .dark [class*="text-emerald-"] { color: #B69F60 !important; }
+  .dark [class*="hover:text-emerald-"]:hover { color: #FFFFFF !important; }
+  .dark .status-approved { color: #B69F60; }
+
+  /* Other legacy semantic accents are mapped into the same brand system. */
+  [class*="bg-blue-"], [class*="bg-purple-"], [class*="bg-cyan-"] { background-color: rgba(26, 50, 88, 0.12) !important; }
+  [class*="text-blue-"], [class*="text-purple-"], [class*="text-cyan-"] { color: #1A3258 !important; }
+  [class*="border-blue-"], [class*="border-purple-"], [class*="border-cyan-"] { border-color: rgba(182, 159, 96, 0.45) !important; }
+  .dark [class*="text-blue-"], .dark [class*="text-purple-"], .dark [class*="text-cyan-"] { color: #B69F60 !important; }
+  .dark [class*="hover:text-blue-"]:hover, .dark [class*="hover:text-purple-"]:hover { color: #FFFFFF !important; }
 }
 
 /* ============================================= */

@@ -572,7 +572,7 @@ const AuthSection = ({ isVisible, onClose }) => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2, duration: 0.4 }}
-                className={`rounded-2xl shadow-xl overflow-hidden ${
+                className={`brand-led rounded-2xl shadow-xl overflow-hidden ${
                   isDark ? 'bg-[#1a1a1a] border border-white/5' : 'bg-white border border-gray-100'
                 }`}
               >

@@ -113,7 +113,7 @@ const Layout = () => {
       <div className={`relative min-h-screen overflow-y-auto transition-colors duration-500 ${
         isDark ? 'bg-[#1a1a1a]' : 'bg-zinc-50'
       }`}>
-               <div className="fixed inset-0 pointer-events-none">
+               <div className="brand-led-ambient fixed inset-0 pointer-events-none">
           {isDark ? (
             <>
               <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-emerald-900/20 rounded-full blur-[120px] animate-pulse-soft" />
@@ -143,7 +143,7 @@ const Layout = () => {
     <div className={`relative min-h-screen overflow-hidden transition-colors duration-500 ${
       isDark ? 'bg-[#1a1a1a]' : 'bg-zinc-50'
     }`}>
-      <div className="fixed inset-0 pointer-events-none">
+      <div className="brand-led-ambient fixed inset-0 pointer-events-none">
         {isDark ? (
           <>
             <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-emerald-900/20 rounded-full blur-[120px] animate-pulse-soft" />

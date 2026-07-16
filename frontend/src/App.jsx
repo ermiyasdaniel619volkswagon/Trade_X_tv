@@ -239,13 +239,13 @@ function App() {
                 },
                 success: {
                   iconTheme: {
-                    primary: '#10b981',
+                    primary: '#B69F60',
                     secondary: '#fff',
                   },
                 },
                 error: {
                   iconTheme: {
-                    primary: '#ef4444',
+                    primary: '#A53D32',
                     secondary: '#fff',
                   },
                 },
