@@ -29,7 +29,7 @@ const ContinuousTrack = ({ items, direction = 'left', speed = 50 }) => {
 
   return (
     <div 
-      className="flex gap-1.5 md:gap-2.5 w-max py-4 overflow-visible select-none cursor-pointer" 
+      className="flex gap-1.5 md:gap-2.5 w-max overflow-visible select-none cursor-pointer" 
       onMouseEnter={handleMouseEnter} 
       onMouseLeave={handleMouseLeave}
     >
@@ -111,9 +111,9 @@ const Carousel = ({ title, children }) => {
       {/* Tilted Geometric Ribbon Wall Wrapper */}
       <div className="relative w-full overflow-visible transform -rotate-[10.5deg] scale-[1.15] origin-center flex flex-col gap-1.5 md:gap-2.5">
         {/* Row 1 - Left Direction Flow */}
-        <ContinuousTrack items={row1} direction="left" speed={55} />
+        <ContinuousTrack items={row1} direction="left" speed={25} />
         {/* Row 2 - Right Direction Flow */}
-        <ContinuousTrack items={finalRow2} direction="right" speed={60} />
+        <ContinuousTrack items={finalRow2} direction="right" speed={28} />
       </div>
 
       {/* Sidebar Edge Shading Vignettes blended with the active background tone */}
