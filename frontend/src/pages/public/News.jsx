@@ -150,8 +150,24 @@ const News = ({ isHomePage = false }) => {
           width: max-content;
           animation: scrollTicker 35s linear infinite;
         }
-        .animate-ticker:hover {
+        .animate-ticker:hover,
+        .animate-ticker:focus-within {
           animation-play-state: paused;
+        }
+
+        .news-ticker-item {
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          background: rgba(26, 50, 88, 0.5);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+          transition: background-color 220ms ease, border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+        }
+        .news-ticker-item:hover,
+        .news-ticker-item:focus-visible {
+          background: rgba(255, 255, 255, 0.16);
+          border-color: ${BRAND.gold};
+          box-shadow: 0 6px 18px rgba(26, 50, 88, 0.28), 0 0 0 2px rgba(182, 159, 96, 0.22);
+          transform: translateY(-1px);
+          outline: none;
         }
         
         .light-effect-maroon { border: 1px solid transparent; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -316,18 +332,21 @@ const News = ({ isHomePage = false }) => {
       {/* SCROLLING TICKER */}
       {/* ============================================= */}
       <div 
-        className="relative mt-12 mb-6 overflow-hidden border-t-2 border-b-2 py-2.5 shadow-md rounded-sm" 
+        className="relative mt-12 mb-6 overflow-hidden border-y-2 py-3 shadow-lg rounded-md" 
         style={{ 
-          backgroundColor: BRAND.navy, 
-          borderColor: BRAND.gold 
+          background: `linear-gradient(110deg, ${BRAND.navy} 0%, #294f86 28%, ${BRAND.maroon} 68%, ${BRAND.gold} 100%)`,
+          borderColor: BRAND.gold,
+          boxShadow: `0 12px 28px ${BRAND.navy}30, 0 0 22px ${BRAND.gold}20`
         }}
       >
         <div className="animate-ticker cursor-pointer">
           {tickerItems.map((item, idx) => (
-            <div 
+            <button
+              type="button"
               key={`${item._id}-${idx}`} 
-              className="flex items-center whitespace-nowrap mx-6 text-white hover:opacity-90 transition-opacity"
+              className="news-ticker-item flex items-center whitespace-nowrap mx-2 px-4 py-2 rounded-full text-left text-white cursor-pointer"
               onClick={() => openPopup(item)}
+              aria-label={`Read ${item.title}`}
             >
               <span className="font-black text-xs md:text-sm uppercase tracking-wider mr-3" style={{ color: BRAND.gold }}>
                 [{item.category || 'NEWS'}]
@@ -335,11 +354,11 @@ const News = ({ isHomePage = false }) => {
               <span className="font-serif text-sm md:text-base font-bold tracking-wide mr-3">
                 {item.title}
               </span>
-              <span className="font-sans text-xs text-gray-300 mr-6">
+              <span className="font-sans text-xs text-white/80 mr-6">
                 {getExcerpt(item.content, 50)}
               </span>
-              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: BRAND.maroon }} />
-            </div>
+              <span className="w-2 h-2 rounded-full shadow-sm" style={{ backgroundColor: BRAND.gold }} />
+            </button>
           ))}
         </div>
       </div>

@@ -87,7 +87,7 @@ const Partnerships = () => {
             {duplicatedLogos.map((logoItem, index) => (
               <div 
                 key={index} 
-                className={`flex-shrink-0 flex justify-center items-center w-28 md:w-36 h-16 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 ${logoItem.link ? 'cursor-pointer' : 'cursor-default'}`}
+                className={`flex-shrink-0 flex justify-center items-center w-28 md:w-36 h-16 ${logoItem.link ? 'cursor-pointer' : 'cursor-default'}`}
               >
                 {logoItem.link ? (
                   <a 
