@@ -174,6 +174,14 @@ export const oauthLimiter = createRateLimiter({
   keyGenerator: (req) => `ip:${getClientIp(req)}`,
 });
 
+export const passwordResetLimiter = createRateLimiter({
+  prefix: 'password-reset',
+  windowMs: 15 * MINUTE,
+  limit: 5,
+  error: 'Too many password reset attempts. Please try again later.',
+  keyGenerator: (req) => `ip:${getClientIp(req)}`,
+});
+
 // ===================== STRICT RATE LIMITER (For sensitive endpoints) =====================
 export const strictLimiter = createRateLimiter({
   prefix: 'strict',
@@ -240,6 +248,7 @@ export default {
   registrationLimiter,
   staffRegistrationLimiter,
   oauthLimiter,
+  passwordResetLimiter,
   strictLimiter,
   reportLimiter,
   notificationLimiter,

@@ -377,6 +377,7 @@ import {
   FiMail, FiLock, FiEye, FiEyeOff, FiBriefcase, 
   FiUser, FiCheckCircle, FiX, FiArrowRight, FiInfo
 } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 import api from '../../services/api.js';
 import GoogleLoginButton from '../common/GoogleLoginButton.jsx'; // ✅ ADDED
 
@@ -673,6 +674,13 @@ const AuthSection = ({ isVisible, onClose }) => {
                       </div>
                       {errors.password && (
                         <p className="text-xs text-rose-400 mt-1">{errors.password}</p>
+                      )}
+                      {isLoginMode && (
+                        <div className="mt-2 text-right">
+                          <Link to="/forgot-password" className="text-sm hover:underline" style={{ color: BRAND.gold }}>
+                            Forgot password?
+                          </Link>
+                        </div>
                       )}
                     </div>
 

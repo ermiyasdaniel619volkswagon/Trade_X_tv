@@ -182,6 +182,8 @@ import Contact from './pages/public/Contact.jsx';
 import FAQ from './pages/public/FAQ.jsx';
 import News from './pages/public/News.jsx';
 import Blog from './pages/public/Blog.jsx';
+import ForgotPassword from './pages/public/ForgotPassword.jsx';
+import ResetPassword from './pages/public/ResetPassword.jsx';
 
 // =============================================
 // PROTECTED PAGES
@@ -262,6 +264,8 @@ function App() {
                 <Route path="/faq" element={<FAQ />} />
                 <Route path="/news" element={<News />} />
                 <Route path="/blog" element={<Blog />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password/:token" element={<ResetPassword />} />
                 
                 {/* Redirect old paths to new combined path */}
                 <Route path="/login" element={<Navigate to="/auth" replace />} />

@@ -43,11 +43,13 @@ import {
   googleAuthCustomer 
 } from '../../controllers/auth/googleAuthController.js';
 import { authenticate } from '../../middleware/auth.js';
+import { forgotPassword, resetPassword } from '../../controllers/auth/passwordResetController.js';
 import {
   authLimiter,
   registrationLimiter,
   staffRegistrationLimiter,
   oauthLimiter,
+  passwordResetLimiter,
 } from '../../middleware/rateLimiter.js';
 
 const router = express.Router();
@@ -59,6 +61,8 @@ router.post('/login', authLimiter, login);
 router.post('/register', staffRegistrationLimiter, register);
 router.post('/register/customer', registrationLimiter, registerCustomer);
 router.post('/refresh', refreshToken);
+router.post('/forgot-password', passwordResetLimiter, forgotPassword);
+router.post('/reset-password/:token', passwordResetLimiter, resetPassword);
 
 // =============================================
 // ✅ GOOGLE AUTH ROUTES - ADDED
