@@ -1,6 +1,6 @@
 
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from '../../context/ThemeContext.jsx';
 import { Helmet } from 'react-helmet-async';
@@ -21,7 +21,19 @@ const News = ({ isHomePage = false }) => {
   const [isHovering, setIsHovering] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedNews, setSelectedNews] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const intervalRef = useRef(null);
+
+  const categories = useMemo(() => [
+    'All',
+    ...Array.from(new Set(news.map((item) => item.category?.trim()).filter(Boolean)))
+  ], [news]);
+
+  const filteredNews = useMemo(() => (
+    selectedCategory === 'All'
+      ? news
+      : news.filter((item) => item.category?.trim() === selectedCategory)
+  ), [news, selectedCategory]);
 
   const fallbackImages = [
     'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&h=800&fit=crop',
@@ -33,7 +45,7 @@ const News = ({ isHomePage = false }) => {
   }, []);
 
   useEffect(() => {
-    if (loading || news.length <= 1 || isPopupOpen) {
+    if (loading || filteredNews.length <= 1 || isPopupOpen) {
       stopRotation();
       return;
     }
@@ -41,12 +53,16 @@ const News = ({ isHomePage = false }) => {
     stopRotation();
     intervalRef.current = setInterval(() => {
       if (!isHovering) {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % news.length);
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % filteredNews.length);
       }
     }, 2000);
 
     return () => stopRotation();
-  }, [news, loading, isPopupOpen, isHovering]);
+  }, [filteredNews, loading, isPopupOpen, isHovering]);
+
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [selectedCategory]);
 
   const stopRotation = () => {
     if (intervalRef.current) {
@@ -99,14 +115,16 @@ const News = ({ isHomePage = false }) => {
     );
   }
 
-  const displayNews = [...news];
-  if (currentIndex > 0) {
-    displayNews.splice(0, 0, displayNews.splice(currentIndex, 1)[0]);
+  const displayNews = [...filteredNews];
+  const safeCurrentIndex = currentIndex % filteredNews.length;
+  if (safeCurrentIndex > 0) {
+    displayNews.splice(0, 0, displayNews.splice(safeCurrentIndex, 1)[0]);
   }
 
   const featuredNews = displayNews[0];
   const secondaryNews = displayNews.slice(1, 5);
   const latestNews = displayNews.slice(5);
+  const nowPlayingNews = [...secondaryNews, ...latestNews].slice(0, 6);
 
   const tickerItems = [...news, ...news];
 
@@ -194,27 +212,49 @@ const News = ({ isHomePage = false }) => {
 
       {/* Page Header */}
       {!isHomePage && (
-        <div className="border-b-2 pb-4 mb-8 flex justify-between items-baseline" style={{ borderColor: BRAND.gold }}>
+        <div className="mb-8 md:mb-10">
           <h1 className="text-4xl md:text-5xl font-serif font-black tracking-tight" style={{ color: isDark ? '#FFFFFF' : '#000000' }}>
-            News Hub
+            The Tradex Briefing Room
           </h1>
-          <div className="flex gap-4 items-baseline">
-            <span className="hidden md:block font-sans text-xs md:text-sm tracking-widest font-black uppercase" style={{ color: BRAND.maroon }}>
-              Dispatches from Tradex TV
-            </span>
-          </div>
+          <p className="mt-3 font-sans text-sm md:text-lg" style={{ color: isDark ? '#B3B3B3' : '#4A4A4A' }}>
+            Stories from traders, company updates, and deep dives into the markets shaping tomorrow.
+          </p>
         </div>
       )}
+
+      <div className="mb-8 flex gap-2 overflow-x-auto pb-2 scrollbar-hide" role="tablist" aria-label="News categories">
+        {categories.map((category) => {
+          const isActive = selectedCategory === category;
+          return (
+            <button
+              key={category}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => setSelectedCategory(category)}
+              className="shrink-0 rounded-full border px-5 py-2.5 font-sans text-xs font-bold uppercase tracking-wide transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#B69F60]"
+              style={{
+                color: isActive ? (isDark ? '#FFFFFF' : BRAND.navy) : (isDark ? '#B3B3B3' : '#333333'),
+                borderColor: isActive ? BRAND.gold : (isDark ? '#333333' : '#E5E7EB'),
+                backgroundColor: isActive ? (isDark ? 'rgba(182,159,96,0.18)' : '#F0F0F0') : 'transparent',
+                boxShadow: isActive ? `0 5px 18px ${BRAND.gold}25` : 'none',
+              }}
+            >
+              {category}
+            </button>
+          );
+        })}
+      </div>
 
       {/* ============================================= */}
       {/* MAIN 3-COLUMN EDITORIAL SYSTEM */}
       {/* ============================================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-stretch">
         
         {/* LEFT COLUMN: Featured News (7 cols) */}
         <div
           // ✅ FIXED: Explicit white background in light mode
-          className="lg:col-span-7 rounded-md p-2 light-effect-maroon cursor-pointer group"
+          className="lg:col-span-8 rounded-[28px] overflow-hidden light-effect-maroon cursor-pointer group"
           style={{
             backgroundColor: isDark ? '#0c0c0c' : '#FFFFFF',
           }}
@@ -222,24 +262,23 @@ const News = ({ isHomePage = false }) => {
           onMouseLeave={() => setIsHovering(false)}
           onClick={() => openPopup(featuredNews)}
         >
-          <div className="layout-card-clean relative">
-            <div className="aspect-[16/10] overflow-hidden bg-gray-100 dark:bg-zinc-900 rounded-sm relative shadow-sm">
+          <div className="layout-card-clean">
+            <div className="aspect-[16/9] overflow-hidden bg-gray-100 dark:bg-zinc-900">
               <img 
                 src={featuredNews.image} 
                 alt={featuredNews.title} 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                className="w-full h-full object-contain transition-opacity duration-500 group-hover:opacity-95"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
             
-            <div className="mt-4 px-1">
+            <div className="p-5 sm:p-7 md:p-8">
               <span className="font-sans text-xs md:text-sm font-black uppercase tracking-[0.2em]"
                     style={{ color: BRAND.maroon }}>
                 {featuredNews.category || 'Featured Story'}
               </span>
               
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-black leading-tight mt-2" style={{ color: isDark ? '#FFFFFF' : '#000000' }}>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-serif font-black leading-tight mt-2" style={{ color: isDark ? '#FFFFFF' : '#000000' }}>
                 {featuredNews.title}
               </h2>
               
@@ -258,23 +297,31 @@ const News = ({ isHomePage = false }) => {
         </div>
 
         {/* MIDDLE COLUMN: Secondary News (3 cols) */}
-        <div className="lg:col-span-3 space-y-4">
-          {secondaryNews.map((item) => (
+        <div className="lg:col-span-4 rounded-[28px] border p-5 sm:p-6 space-y-3" style={{ borderColor: isDark ? '#2A2A2A' : '#EEEEEE', backgroundColor: isDark ? '#111111' : '#FFFFFF' }}>
+          <div className="mb-5">
+            <h3 className="font-sans text-sm font-black uppercase tracking-[0.35em]" style={{ color: BRAND.navy }}>Now Playing</h3>
+            <p className="mt-1 font-sans text-xs" style={{ color: isDark ? '#777777' : '#9CA3AF' }}>Curated mix</p>
+          </div>
+          {nowPlayingNews.map((item) => (
             <div 
               key={item._id} 
               // ✅ FIXED: Explicit background in light mode
-              className="group cursor-pointer p-4 rounded-md light-effect-gold flex flex-col justify-center min-h-[150px]"
+              className="group cursor-pointer p-2 rounded-xl light-effect-gold flex items-center gap-3 min-h-[96px]"
               style={{
                 backgroundColor: isDark ? 'rgba(24,24,24,0.3)' : '#F9FAFB',
               }}
               onClick={() => openPopup(item)}
             >
-              <span className="block font-sans text-[10px] md:text-xs font-black uppercase tracking-[0.18em] mb-2"
+              <div className="h-20 w-24 shrink-0 overflow-hidden rounded-xl bg-gray-100 dark:bg-zinc-900">
+                <img src={item.image} alt="" className="h-full w-full object-contain" loading="lazy" />
+              </div>
+              <div className="min-w-0 flex-1">
+              <span className="block font-sans text-[10px] md:text-xs font-black uppercase tracking-[0.18em] mb-1"
                     style={{ color: BRAND.gold }}>
                 {item.category || 'General'}
               </span>
               
-              <h3 className="text-lg md:text-xl lg:text-2xl font-serif font-bold leading-snug tracking-tight mb-2 line-clamp-3"
+              <h3 className="text-sm md:text-base font-serif font-bold leading-snug tracking-tight mb-1 line-clamp-2"
                   style={{ color: isDark ? '#FFFFFF' : '#000000' }}>
                 {item.title}
               </h3>
@@ -282,12 +329,13 @@ const News = ({ isHomePage = false }) => {
               <div className="mt-auto font-sans text-xs font-bold" style={{ color: isDark ? '#666' : '#9CA3AF' }}>
                 {formatDate(item.date)}
               </div>
+              </div>
             </div>
           ))}
         </div>
 
         {/* RIGHT COLUMN: Latest Sidebar (2 cols) */}
-        <div className="lg:col-span-2">
+        <div className="hidden">
           <div 
             className="sticky top-24 p-3 rounded-md border-t-2" 
             style={{ 

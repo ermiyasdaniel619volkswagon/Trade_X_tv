@@ -7,7 +7,7 @@ import { useTheme } from '../../context/ThemeContext.jsx';
 import { 
   FiMenu, FiX, FiChevronDown, FiUser,
   FiLogOut, FiSun, FiMoon, FiShield,
-  FiHome, FiRss, FiEdit2, FiInfo, FiHelpCircle, FiPackage
+  FiHome, FiRss, FiEdit2, FiInfo, FiHelpCircle, FiPackage, FiDollarSign
 } from 'react-icons/fi';
 import { FaYoutube } from 'react-icons/fa';
 
@@ -107,7 +107,7 @@ const Navbar = () => {
 
       lastScrollY.current = currentScrollY;
       
-      const sections = ['home', 'packages', 'news', 'blog', 'about', 'faq'];
+      const sections = ['home', 'packages', 'currency-rates', 'news', 'blog', 'about', 'faq'];
       let current = 'home';
       sections.forEach(id => {
         const el = document.getElementById(id);
@@ -191,6 +191,7 @@ const Navbar = () => {
   const navLinks = [
     { to: '/', label: 'Home', sectionId: 'home', icon: FiHome },
     { to: '/', label: 'Packages', sectionId: 'packages', icon: FiPackage },
+    { to: '/', label: 'Rates', sectionId: 'currency-rates', icon: FiDollarSign },
     { to: '/', label: 'News', sectionId: 'news', icon: FiRss },
     { to: '/', label: 'Blog', sectionId: 'blog', icon: FiEdit2 },
     { to: '/', label: 'About', sectionId: 'about', icon: FiInfo },
