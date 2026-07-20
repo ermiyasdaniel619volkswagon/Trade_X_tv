@@ -29,12 +29,13 @@ const escapeHtml = (value = '') => String(value)
 export const sendPasswordResetEmail = async ({ email, resetUrl, firstName }) => {
   const safeName = escapeHtml(firstName || 'Customer');
   const safeUrl = escapeHtml(resetUrl);
-  const logoUrl = String(process.env.MAIL_LOGO_URL || '').trim();
+  const frontendUrl = String(process.env.FRONTEND_URL || '').trim().replace(/\/$/, '');
+  const logoUrl = String(process.env.MAIL_LOGO_URL || (frontendUrl ? `${frontendUrl}/logo.png` : '')).trim();
   const safeLogoUrl = /^https:\/\//i.test(logoUrl) ? escapeHtml(logoUrl) : '';
   const supportEmail = String(process.env.SUPPORT_EMAIL || process.env.SMTP_USER || '').trim();
   const safeSupportEmail = escapeHtml(supportEmail);
   const logoMarkup = safeLogoUrl
-    ? `<img src="${safeLogoUrl}" width="150" alt="Trade X TV" style="display:block;width:150px;max-width:100%;height:auto;border:0;outline:none;text-decoration:none;">`
+    ? `<table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto;background:#ffffff;border-radius:12px;"><tr><td bgcolor="#ffffff" style="padding:12px 18px;border-radius:12px;background:#ffffff;background-image:linear-gradient(#ffffff,#ffffff);"><img src="${safeLogoUrl}" width="180" alt="Trade X TV" style="display:block;width:180px;max-width:100%;height:auto;border:0;outline:none;text-decoration:none;"></td></tr></table>`
     : '<div style="font-size:24px;line-height:30px;font-weight:800;letter-spacing:.3px;color:#ffffff;">Trade X TV</div>';
 
   await getTransporter().sendMail({
@@ -57,7 +58,7 @@ export const sendPasswordResetEmail = async ({ email, resetUrl, firstName }) => 
               <td align="center" style="padding:32px 14px;">
                 <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 8px 30px rgba(26,50,88,.10);">
                   <tr>
-                    <td style="padding:26px 34px;background:#1A3258;border-bottom:4px solid #B69F60;">
+                    <td align="center" bgcolor="#1A3258" style="padding:24px 34px;background:#1A3258;border-bottom:4px solid #B69F60;">
                       ${logoMarkup}
                     </td>
                   </tr>
