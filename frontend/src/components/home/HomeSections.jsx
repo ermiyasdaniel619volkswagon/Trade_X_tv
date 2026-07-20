@@ -11,6 +11,7 @@ import FAQPage from '../../pages/public/FAQ.jsx';
 
 // Import the new Partnerships component
 import Partnerships from './Partnerships.jsx';
+import Packages from './Packages.jsx';
 
 const BRAND = {
   navy: '#1A3258',
@@ -176,6 +177,7 @@ const HomeSections = () => {
     <>
       <NewsSection />
       <BlogSection />
+      <Packages />
       <AboutSection />
      <FAQSection />
       <Partnerships />

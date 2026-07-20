@@ -7,7 +7,7 @@ import { useTheme } from '../../context/ThemeContext.jsx';
 import { 
   FiMenu, FiX, FiChevronDown, FiUser,
   FiLogOut, FiSun, FiMoon, FiShield,
-  FiHome, FiRss, FiEdit2, FiInfo, FiHelpCircle
+  FiHome, FiRss, FiEdit2, FiInfo, FiHelpCircle, FiPackage
 } from 'react-icons/fi';
 import { FaYoutube } from 'react-icons/fa';
 
@@ -19,20 +19,15 @@ import logoDark from '../../assets/logo2.png';
 // ANIMATION VARIANTS
 // =============================================
 const navVariants = {
-  hidden: { 
-    y: '-100%', 
+  hidden: {
+    y: '-100%',
     opacity: 0,
-    transition: { duration: 0.3, ease: 'easeInOut' }
+    transition: { duration: 0.25, ease: 'easeInOut' }
   },
-  visible: { 
-    y: 0, 
+  visible: {
+    y: 0,
     opacity: 1,
-    transition: { 
-      type: 'spring', 
-      stiffness: 100, 
-      damping: 20,
-      duration: 0.5 
-    }
+    transition: { duration: 0.3, ease: 'easeOut' }
   }
 };
 
@@ -101,19 +96,18 @@ const Navbar = () => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
       setScrolled(currentScrollY > 20);
 
       if (currentScrollY > lastScrollY.current && currentScrollY > 80) {
         setIsVisible(false);
         setIsUserMenuOpen(false);
-      } else if (currentScrollY < lastScrollY.current) {
+      } else if (currentScrollY < lastScrollY.current || currentScrollY <= 80) {
         setIsVisible(true);
       }
 
       lastScrollY.current = currentScrollY;
       
-      const sections = ['home', 'news', 'blog', 'about', 'faq'];
+      const sections = ['home', 'packages', 'news', 'blog', 'about', 'faq'];
       let current = 'home';
       sections.forEach(id => {
         const el = document.getElementById(id);
@@ -196,6 +190,7 @@ const Navbar = () => {
   // =============================================
   const navLinks = [
     { to: '/', label: 'Home', sectionId: 'home', icon: FiHome },
+    { to: '/', label: 'Packages', sectionId: 'packages', icon: FiPackage },
     { to: '/', label: 'News', sectionId: 'news', icon: FiRss },
     { to: '/', label: 'Blog', sectionId: 'blog', icon: FiEdit2 },
     { to: '/', label: 'About', sectionId: 'about', icon: FiInfo },
@@ -228,11 +223,25 @@ const Navbar = () => {
   // RENDER
   // =============================================
   return (
+    <>
+      <div className="fixed top-0 left-0 right-0 z-[1000] h-8 bg-black text-white overflow-hidden border-b border-white/10 flex items-center" role="region" aria-label="Tradex TV contact information and announcements">
+        <div className="navbar-ticker flex w-max whitespace-nowrap text-[11px] sm:text-xs font-medium tracking-wide">
+          {[0, 1].map((copy) => (
+            <div key={copy} className="flex shrink-0 items-center" aria-hidden={copy === 1}>
+              <span className="mx-5 sm:mx-8"> 8th Floor, Bole Medhanealem Building, Addis Ababa, Ethiopia</span>
+              <span className="mx-5 sm:mx-8"> +251 90 400 4400</span>
+              <span className="mx-5 sm:mx-8"> media@tradextv.com</span>
+              <span className="mx-5 sm:mx-8"><span className="inline-block h-2 w-2 rounded-full bg-[#A53D32] mr-2 animate-pulse" />Live updates and the latest stories from Tradex TV</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
     <motion.nav
       initial="visible"
-      animate={isVisible ? "visible" : "hidden"}
+      animate={isVisible ? 'visible' : 'hidden'}
       variants={navVariants}
-      className={`fixed top-0 left-0 right-0 z-[999] transition-colors duration-500 ${
+      className={`fixed top-8 left-0 right-0 z-[999] transition-colors duration-500 ${
         scrolled
           ? isDark
             ? 'bg-[#0f1014]/95 backdrop-blur-2xl border-b border-white/5 shadow-2xl shadow-black/50'
@@ -243,7 +252,7 @@ const Navbar = () => {
       }`}
     >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-14 md:h-16 lg:h-20">
+        <div className="flex items-center justify-between h-10">
           {/* Logo */}
           <Link 
             to="/" 
@@ -253,7 +262,7 @@ const Navbar = () => {
             <motion.img 
               src={logoSrc} 
               alt="Tradex TV" 
-              className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto object-contain transition-all duration-500 group-hover:scale-105"
+              className="h-7 sm:h-8 w-auto object-contain transition-all duration-500 group-hover:scale-105"
               whileHover={{ rotate: [-1, 1, -1, 0], transition: { duration: 0.5 } }}
             />
           </Link>
@@ -267,7 +276,7 @@ const Navbar = () => {
                   key={link.sectionId}
                   onClick={() => scrollToSection(link.sectionId)}
                   // Strictly Text Color and Drop-Shadow LED (No Background, No Underline)
-                  className={`relative px-3 lg:px-4 py-2 text-base lg:text-lg font-medium tracking-wider uppercase transition-all duration-300 ${
+                  className={`relative px-2 lg:px-3 py-1 text-xs lg:text-sm font-medium tracking-wider uppercase transition-all duration-300 ${
                     isActive
                       ? isDark
                         ? 'text-[#B69F60] drop-shadow-[0_0_10px_rgba(182,159,96,0.8)]' // Gold LED Active (Dark Mode)
@@ -293,7 +302,7 @@ const Navbar = () => {
               href="https://www.youtube.com/@tradextv7"
               target="_blank"
               rel="noopener noreferrer"
-              className={`hidden sm:flex items-center gap-2 px-5 py-2 rounded-full font-bold text-sm tracking-widest uppercase transition-all duration-300 border ${
+              className={`hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full font-bold text-xs tracking-widest uppercase transition-all duration-300 border ${
                 isDark 
                   ? 'bg-[#18181b] text-white border-white/10 hover:bg-[#27272a] hover:border-white/20' 
                   : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-50 shadow-sm'
@@ -302,7 +311,7 @@ const Navbar = () => {
               whileTap={{ scale: 0.95 }}
               aria-label="YouTube Channel"
             >
-              <FaYoutube className="text-[#ff0000] text-xl drop-shadow-[0_0_8px_rgba(255,0,0,0.8)]" />
+              <FaYoutube className="text-[#ff0000] text-base drop-shadow-[0_0_8px_rgba(255,0,0,0.8)]" />
               <span>YouTube</span>
             </motion.a>
 
@@ -336,7 +345,7 @@ const Navbar = () => {
                     whileTap={{ scale: 0.97 }}
                   >
                     {/* User Avatar - Mixes Navy, Maroon, and Gold in a gradient */}
-                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-gradient-to-br from-[#1A3258] via-[#A53D32] to-[#B69F60] flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-[#A53D32]/20">
+                    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#1A3258] via-[#A53D32] to-[#B69F60] flex items-center justify-center text-white font-bold text-xs shadow-lg shadow-[#A53D32]/20">
                       {displayName.charAt(0).toUpperCase()}
                     </div>
                     <span className={`text-sm font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-black'}`}>
@@ -542,6 +551,7 @@ const Navbar = () => {
         </AnimatePresence>
       </div>
     </motion.nav>
+    </>
   );
 };
 

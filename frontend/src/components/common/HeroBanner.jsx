@@ -649,8 +649,7 @@ const HeroBanner = ({
         <div 
           className="relative w-full overflow-hidden group"
           style={{
-            height: 'clamp(200px, 40vh, 700px)',
-            minHeight: '200px',
+            height: 'clamp(200px, 56.25vw, 700px)',
             maxHeight: '700px',
           }}
           onTouchStart={handleTouchStart}
@@ -664,10 +663,10 @@ const HeroBanner = ({
                 <img
                   src={slide.image || `https://img.youtube.com/vi/${slide.videoId}/hqdefault.jpg`}
                   alt={slide.title || 'Hero slide'}
-                  className="w-full h-full object-cover object-center"
+                  className="w-full h-full object-contain object-center"
                   style={{
-                    transform: `scale(${isTransitioning ? 1.05 : 1})`,
-                    transition: 'transform 0.8s ease-out',
+                    opacity: isTransitioning ? 0.9 : 1,
+                    transition: 'opacity 0.4s ease-out',
                   }}
                   loading="eager"
                 />

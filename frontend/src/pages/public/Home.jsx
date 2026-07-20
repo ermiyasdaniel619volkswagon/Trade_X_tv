@@ -261,7 +261,7 @@ const Home = () => {
       >
         <Navbar />
 
-        <div id="home" className="pt-16 md:pt-20">
+        <div id="home" className="pt-[72px]">
           <HeroBanner
             slides={heroSlides}
             mode={heroMode}

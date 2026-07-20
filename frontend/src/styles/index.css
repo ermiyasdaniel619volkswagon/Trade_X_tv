@@ -466,3 +466,24 @@ img {
     overflow: hidden;
   }
 }
+
+@keyframes navbarTicker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.navbar-ticker {
+  animation: navbarTicker 32s linear infinite;
+  will-change: transform;
+}
+
+.navbar-ticker:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar-ticker {
+    animation: none;
+    transform: translateX(0);
+  }
+}
