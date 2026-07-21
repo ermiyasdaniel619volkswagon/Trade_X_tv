@@ -18,7 +18,7 @@ const BRAND = {
 const CLIENT_LOGOS = [
   { id: 1, src: enesra, alt: 'Enisra', link: 'https://www.enisra.com' },
   { id: 2, src: tesbin, alt: 'Tesbinn', link: 'https://tesbinn.com/' },
-  { id: 3, src: logo, alt: 'TradeX TV', link: null },
+  { id: 3, src: logo, alt: 'TRADE X TV', link: null },
   { id: 4, src: enesra, alt: 'Enisra', link: 'https://www.enisra.com' },
   { id: 5, src: tesbin, alt: 'Tesbinn', link: 'https://tesbinn.com/' },
 ];

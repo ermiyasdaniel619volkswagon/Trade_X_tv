@@ -38,8 +38,8 @@ const Contact = () => {
   return (
     <>
       <Helmet>
-        <title>Contact - Tradex TV</title>
-        <meta name="description" content="Get in touch with Tradex TV for your media production needs." />
+        <title>Contact - TRADE X TV</title>
+        <meta name="description" content="Get in touch with TRADE X TV for your media production needs." />
       </Helmet>
 
       <div className={`min-h-screen transition-colors duration-300 ${

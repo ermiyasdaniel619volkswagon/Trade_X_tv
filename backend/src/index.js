@@ -115,7 +115,7 @@ app.use(async (req, res, next) => {
 app.get('/', (req, res) => {
   return res.status(200).json({
     success: true,
-    message: '🚀 TradExTV Portal Backend Deployment is Fully Successful!',
+    message: '🚀 TRADE X TV Portal Backend Deployment is Fully Successful!',
     environment: process.env.VERCEL === '1' ? 'Vercel Serverless Cloud' : 'Local Machine',
     databaseStatus: 'Connected & Authenticated',
     timestamp: new Date().toISOString()

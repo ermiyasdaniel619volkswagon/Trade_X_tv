@@ -71,7 +71,7 @@ const About = ({ isHomePage = false }) => {
           የመጀመሪያው ቢዝነስ ቴሌቪዥን እና ሬዲዮ በኢትዮጵያ!
         </p>
         <p className="text-base text-center mt-1" style={{ color: colors.textSecondary }}>
-          Business TV & Radio | Tradextv. 
+          Business TV & Radio | TRADE X TV.
         </p>
       </div>
 
@@ -90,8 +90,8 @@ const About = ({ isHomePage = false }) => {
   return (
     <>
       <Helmet>
-        <title>About - Tradex TV</title>
-        <meta name="description" content="Learn about Tradex TV - leading business media production company." />
+        <title>About - TRADE X TV</title>
+        <meta name="description" content="Learn about TRADE X TV - leading business media production company." />
       </Helmet>
 
       <div className="max-w-6xl mx-auto">
@@ -100,7 +100,7 @@ const About = ({ isHomePage = false }) => {
           <div className="flex items-center gap-3 mb-2">
             <div className="w-1 h-10" style={{ backgroundColor: BRAND.navy }} />
             <h1 className="text-4xl md:text-5xl font-bold" style={{ color: colors.text }}>
-              About <span style={{ color: BRAND.gold }}>Tradex TV</span>
+              About <span style={{ color: BRAND.gold }}>TRADE X TV</span>
             </h1>
           </div>
           <div className="flex items-center gap-4 ml-4">

@@ -395,7 +395,7 @@ export default function CustomerDashboard() {
     return (
       <div className="min-h-screen p-4 md:p-8 transition-colors duration-300">
         <Helmet>
-          <title>My Advertising Requests - TRADEX TV</title>
+          <title>My Advertising Requests - TRADE X TV</title>
         </Helmet>
 
         <div className="max-w-7xl mx-auto">
@@ -405,7 +405,7 @@ export default function CustomerDashboard() {
                 My Advertising Requests
               </h1>
               <p className={`text-sm ${isDark ? 'text-emerald-100/70' : 'text-emerald-900/70'}`}>
-                Track and manage all your TRADEX TV advertising submissions
+                Track and manage all your TRADE X TV advertising submissions
               </p>
             </div>
             <button
@@ -449,7 +449,7 @@ export default function CustomerDashboard() {
             <div className={`text-center py-16 rounded-3xl border ${isDark ? 'bg-zinc-900/60 border-white/5' : 'bg-white border-emerald-100'}`}>
               <FiFileText className="text-6xl text-emerald-500/30 mx-auto mb-4" />
               <h3 className="text-xl font-bold text-zinc-400 mb-2">No Requests Yet</h3>
-              <p className="text-sm text-zinc-500">Start your first advertising campaign with TRADEX TV today</p>
+              <p className="text-sm text-zinc-500">Start your first advertising campaign with TRADE X TV today</p>
               <button
                 onClick={() => {
                   resetForm();
@@ -548,7 +548,7 @@ export default function CustomerDashboard() {
     return (
       <div className="min-h-screen p-4 md:p-8 transition-colors duration-300">
         <Helmet>
-          <title>Request Details - TRADEX TV</title>
+          <title>Request Details - TRADE X TV</title>
         </Helmet>
 
         <div className="max-w-4xl mx-auto">
@@ -684,7 +684,7 @@ export default function CustomerDashboard() {
   return (
     <div className="min-h-screen p-4 md:p-8 transition-colors duration-300">
       <Helmet>
-        <title>{editingId ? 'Edit Advertising Request' : 'New Advertising Request'} - TRADEX TV</title>
+        <title>{editingId ? 'Edit Advertising Request' : 'New Advertising Request'} - TRADE X TV</title>
       </Helmet>
 
       <div className="max-w-4xl mx-auto">
@@ -710,7 +710,7 @@ export default function CustomerDashboard() {
               {editingId ? 'Edit Campaign' : 'New Advertising Request'}
             </span>
             <h1 className={`text-3xl md:text-4xl font-extrabold tracking-tight mt-3 ${isDark ? 'text-white' : 'text-emerald-950'}`}>
-              {editingId ? 'Update Your Request' : 'Advertise With TRADEX TV'}
+              {editingId ? 'Update Your Request' : 'Advertise With TRADE X TV'}
             </h1>
             <p className={`mt-2 text-sm md:text-base leading-relaxed ${isDark ? 'text-emerald-100/70' : 'text-emerald-900/70'}`}>
               {editingId 
@@ -1010,7 +1010,7 @@ export default function CustomerDashboard() {
                     <FiInfo size={20} className="text-emerald-400 flex-shrink-0 mt-0.5" />
                     <div className="text-xs text-zinc-400 leading-relaxed">
                       <p className={`font-bold ${isDark ? 'text-emerald-300' : 'text-emerald-900'}`}>Terms & Conditions</p>
-                      <p className="mt-1 text-[11px]">By submitting this request, you agree to TRADEX TV's advertising terms. Final pricing and production details will be confirmed upon supervisor approval.</p>
+                      <p className="mt-1 text-[11px]">By submitting this request, you agree to TRADE X TV's advertising terms. Final pricing and production details will be confirmed upon supervisor approval.</p>
                     </div>
                   </div>
 

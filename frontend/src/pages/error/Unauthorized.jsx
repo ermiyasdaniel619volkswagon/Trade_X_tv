@@ -11,7 +11,7 @@ const Unauthorized = () => {
   return (
     <>
       <Helmet>
-        <title>Unauthorized - Tradex TV</title>
+        <title>Unauthorized - TRADE X TV</title>
       </Helmet>
       <div className={`min-h-screen flex items-center justify-center px-4 ${
         isDark ? 'bg-[#01110a]' : 'bg-emerald-50'

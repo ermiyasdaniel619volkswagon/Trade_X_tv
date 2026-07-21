@@ -362,8 +362,8 @@ const Blog = ({ isHomePage = false }) => {
       {!isHomePage && (
         <>
           <Helmet>
-            <title>Blog - Tradex TV</title>
-            <meta name="description" content="Insights and articles from Tradex TV media production experts." />
+            <title>Blog - TRADE X TV</title>
+            <meta name="description" content="Insights and articles from TRADE X TV media production experts." />
           </Helmet>
           <div className="max-w-7xl mx-auto">
             <div className="mb-10">

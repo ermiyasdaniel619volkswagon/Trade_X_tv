@@ -266,7 +266,7 @@ const Footer = () => {
 
           {/* Copyright */}
           <div className={`text-center text-xs ${isDark ? 'text-[#B69F60]' : 'text-gray-400'}`}>
-            &copy; {currentYear} TradeX TV. All rights reserved.
+            &copy; {currentYear} TRADE X TV. All rights reserved.
           </div>
         </div>
       </footer>

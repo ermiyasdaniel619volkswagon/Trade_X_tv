@@ -137,7 +137,7 @@ const ReviewPipeline = () => {
   return (
     <>
       <Helmet>
-        <title>Review Pipeline - Tradex TV</title>
+        <title>Review Pipeline - TRADE X TV</title>
       </Helmet>
 
       <div className="space-y-6">
@@ -356,7 +356,7 @@ const ReviewPipeline = () => {
                     </div>
                   </Section>
 
-                  <Section title="TradEx TV Support" icon={FiCheckCircle} section="support">
+                  <Section title="TRADE X TV Support" icon={FiCheckCircle} section="support">
                     <div className="grid grid-cols-2 gap-1">
                       {Object.entries(selectedReport.tradexSupport || {}).map(([key, value]) => (
                         <CheckboxView key={key} label={key.replace(/([A-Z])/g, ' $1').trim()} value={value} />

@@ -292,7 +292,7 @@ const MyRequests = () => {
   return (
     <>
       <Helmet>
-        <title>My Advertising Requests - Tradex TV</title>
+        <title>My Advertising Requests - TRADE X TV</title>
       </Helmet>
 
       <div className="space-y-6">

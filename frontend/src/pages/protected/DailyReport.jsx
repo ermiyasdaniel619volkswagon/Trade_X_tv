@@ -236,7 +236,7 @@ const DailyReport = () => {
   return (
     <>
       <Helmet>
-        <title>Daily Report - Tradex TV</title>
+        <title>Daily Report - TRADE X TV</title>
       </Helmet>
 
       <div className="space-y-6">
@@ -403,7 +403,7 @@ const DailyReport = () => {
               <span className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white text-sm font-bold shadow-lg shadow-amber-500/20">
                 D
               </span>
-              TradEx TV Support
+              TRADE X TV Support
             </h2>
             <div className="grid sm:grid-cols-2 gap-2">
               {Object.keys(report.tradexSupport).map((field) => (

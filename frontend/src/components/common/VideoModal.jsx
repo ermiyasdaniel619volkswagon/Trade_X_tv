@@ -136,7 +136,7 @@ const VideoModal = ({
             <div className="flex flex-wrap gap-4 text-sm">
               <div>
                 <span className="text-zinc-500">Channel:</span>
-                <span className="text-zinc-300 ml-2">{video.channel || 'Tradex TV Official'}</span>
+                <span className="text-zinc-300 ml-2">{video.channel || 'TRADE X TV Official'}</span>
               </div>
               <div>
                 <span className="text-zinc-500">Views:</span>

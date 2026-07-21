@@ -17,7 +17,7 @@ const BRAND = {
 const PACKAGES = [
   { name: 'Starter Visibility', price: '15,000 ETB', period: '/ week', description: '5 weekly TV advertisements supported by a targeted social media post.', badge: 'High Engagement', icon: FiTv },
   { name: 'Growth Partner', price: '35,000 ETB', period: '/ week', description: 'TV advertisements, on-screen logo placement, and a featured guest appearance.', badge: 'Popular Choice', icon: FiTrendingUp, featured: true },
-  { name: 'Strategic Sponsor', price: '150K–250K ETB', period: '/ month', description: 'Premium sponsorship placements across a complete Tradex TV program.', badge: 'Enterprise Core', icon: FiAward },
+  { name: 'Strategic Sponsor', price: '150K–250K ETB', period: '/ month', description: 'Premium sponsorship placements across a complete TRADE X TV program.', badge: 'Enterprise Core', icon: FiAward },
   { name: 'Business Documentary', price: '80K–150K ETB', period: '', description: 'A high-definition, customized company-profile film produced by our team.', badge: 'Brand Focus', icon: FiCamera },
   { name: 'Embassy Promotion', price: '250K–450K ETB', period: '', description: 'Country-focused thematic-week content and professional media coverage.', badge: 'Global Scale', icon: FiGlobe },
   { name: 'Livestream Launch', price: '20K–45K ETB', period: '/ session', description: 'Live multi-platform production and broadcast for your product launch.', badge: 'Instant Leads', icon: FiRadio },

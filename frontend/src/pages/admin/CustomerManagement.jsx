@@ -264,7 +264,7 @@ const CustomerManagement = () => {
     return (
       <div className="min-h-screen p-4 md:p-8 transition-colors duration-300">
         <Helmet>
-          <title>Customer Details - TRADEX TV Admin</title>
+          <title>Customer Details - TRADE X TV Admin</title>
         </Helmet>
 
         <div className="max-w-4xl mx-auto">
@@ -402,7 +402,7 @@ const CustomerManagement = () => {
   return (
     <>
       <Helmet>
-        <title>Customer Management - Tradex TV Admin</title>
+        <title>Customer Management - TRADE X TV Admin</title>
       </Helmet>
 
       <div className="space-y-6">

@@ -410,7 +410,7 @@ const ManageBlogs = () => {
   return (
     <>
       <Helmet>
-        <title>Manage Blogs - Tradex TV</title>
+        <title>Manage Blogs - TRADE X TV</title>
       </Helmet>
 
       <div className="space-y-6">

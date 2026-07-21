@@ -172,7 +172,7 @@ const ManageHeroVideos = () => {
   return (
     <>
       <Helmet>
-        <title>Manage Main Board - Tradex TV</title>
+        <title>Manage Main Board - TRADE X TV</title>
       </Helmet>
 
       <div className="space-y-6">

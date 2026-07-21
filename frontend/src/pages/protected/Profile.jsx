@@ -149,7 +149,7 @@ const Profile = () => {
   return (
     <>
       <Helmet>
-        <title>My Analytics - Tradex TV</title>
+        <title>My Analytics - TRADE X TV</title>
       </Helmet>
 
       <div className="space-y-6">

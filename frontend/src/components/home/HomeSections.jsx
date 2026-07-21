@@ -114,10 +114,10 @@ const HomeSections = () => {
             </span>
           </div>
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight" style={{ color: colors.text }}>
-            About <span style={{ color: colors.gold }}>TradeX TV</span>
+            About <span style={{ color: colors.gold }}>TRADE X TV</span>
           </h2>
           <p className="mt-2 text-lg" style={{ color: colors.textSecondary }}>
-            Welcome to TradeX TV Zillion News!!
+            Welcome to TRADE X TV Zillion News!!
           </p>
           
           <div className="mt-4 overflow-hidden">

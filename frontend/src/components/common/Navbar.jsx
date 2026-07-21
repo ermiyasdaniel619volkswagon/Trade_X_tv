@@ -225,14 +225,14 @@ const Navbar = () => {
   // =============================================
   return (
     <>
-      <div className="fixed top-0 left-0 right-0 z-[1000] h-8 bg-black text-white overflow-hidden border-b border-white/10 flex items-center" role="region" aria-label="Tradex TV contact information and announcements">
+      <div className="fixed top-0 left-0 right-0 z-[1000] h-8 bg-black text-white overflow-hidden border-b border-white/10 flex items-center" role="region" aria-label="TRADE X TV contact information and announcements">
         <div className="navbar-ticker flex w-max whitespace-nowrap text-[11px] sm:text-xs font-medium tracking-wide">
           {[0, 1].map((copy) => (
             <div key={copy} className="flex shrink-0 items-center" aria-hidden={copy === 1}>
               <span className="mx-5 sm:mx-8"> 8th Floor, Bole Medhanealem Building, Addis Ababa, Ethiopia</span>
               <span className="mx-5 sm:mx-8"> +251 90 400 4400</span>
               <span className="mx-5 sm:mx-8"> media@tradextv.com</span>
-              <span className="mx-5 sm:mx-8"><span className="inline-block h-2 w-2 rounded-full bg-[#A53D32] mr-2 animate-pulse" />Live updates and the latest stories from Tradex TV</span>
+              <span className="mx-5 sm:mx-8"><span className="inline-block h-2 w-2 rounded-full bg-[#A53D32] mr-2 animate-pulse" />Live updates and the latest stories from TRADE X TV</span>
             </div>
           ))}
         </div>
@@ -262,7 +262,7 @@ const Navbar = () => {
           >
             <motion.img 
               src={logoSrc} 
-              alt="Tradex TV" 
+              alt="TRADE X TV"
               className="h-7 sm:h-8 w-auto object-contain transition-all duration-500 group-hover:scale-105"
               whileHover={{ rotate: [-1, 1, -1, 0], transition: { duration: 0.5 } }}
             />

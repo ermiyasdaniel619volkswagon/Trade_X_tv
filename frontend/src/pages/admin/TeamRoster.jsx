@@ -197,7 +197,7 @@ const TeamRoster = () => {
   return (
     <>
       <Helmet>
-        <title>Team Roster - Tradex TV</title>
+        <title>Team Roster - TRADE X TV</title>
       </Helmet>
 
       <div className="space-y-6">

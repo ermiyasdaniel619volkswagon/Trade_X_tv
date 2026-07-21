@@ -24,7 +24,7 @@ const videoSchema = new mongoose.Schema({
   channel: {
     type: String,
     trim: true,
-    default: 'Tradex TV Official',
+    default: 'TRADE X TV Official',
   },
   category: {
     type: String,

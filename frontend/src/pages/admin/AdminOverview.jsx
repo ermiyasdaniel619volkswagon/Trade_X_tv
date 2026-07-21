@@ -104,7 +104,7 @@ const AdminOverview = () => {
   return (
     <>
       <Helmet>
-        <title>Admin Overview - Tradex TV</title>
+        <title>Admin Overview - TRADE X TV</title>
       </Helmet>
 
       <div className="space-y-6">

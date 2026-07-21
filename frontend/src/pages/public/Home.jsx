@@ -51,7 +51,7 @@ const DEFAULT_HERO_SLIDES = [
   },
   {
     id: 3,
-    title: 'Tradex TV Live',
+    title: 'TRADE X TV Live',
     description: 'Experience premium media production and broadcasting at its finest.',
     image: hero3,
     badge: 'Premium',
@@ -247,11 +247,17 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Tradex TV - Premium Media Production</title>
+        <title>TRADE X TV | Latest News</title>
         <meta
           name="description"
-          content="Professional media production, broadcasting, and content creation services."
+          content="TRADE X TV is Africa's premier business media channel and B2B marketplace, connecting businesses through news and trade insights."
         />
+        <link rel="canonical" href="https://tradex-frontend-eight.vercel.app/" />
+        <meta property="og:site_name" content="TRADE X TV" />
+        <meta property="og:title" content="TRADE X TV | Latest News" />
+        <meta property="og:description" content="Africa's premier business media channel and B2B marketplace, connecting businesses through news and trade insights." />
+        <meta property="og:url" content="https://tradex-frontend-eight.vercel.app/" />
+        <meta name="twitter:title" content="TRADE X TV | Latest News" />
       </Helmet>
 
       <div
@@ -329,7 +335,7 @@ const Home = () => {
                       isDark ? 'text-gray-300' : 'text-gray-600'
                     }`}
                   >
-                    Join Tradex TV today and showcase your business to thousands of viewers. Get started with our premium advertising packages designed for businesses like yours.
+                    Join TRADE X TV today and showcase your business to thousands of viewers. Get started with our premium advertising packages designed for businesses like yours.
                   </motion.p>
 
                   <motion.div

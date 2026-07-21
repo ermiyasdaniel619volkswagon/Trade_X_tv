@@ -369,7 +369,7 @@ const ManageNews = () => {
   return (
     <>
       <Helmet>
-        <title>Manage News - Tradex TV</title>
+        <title>Manage News - TRADE X TV</title>
       </Helmet>
 
       <div className="space-y-6">

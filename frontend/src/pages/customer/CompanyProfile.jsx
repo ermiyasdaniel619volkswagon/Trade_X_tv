@@ -146,7 +146,7 @@ const CompanyProfile = () => {
   return (
     <>
       <Helmet>
-        <title>Company Profile - Tradex TV</title>
+        <title>Company Profile - TRADE X TV</title>
       </Helmet>
 
       <div className="space-y-6">

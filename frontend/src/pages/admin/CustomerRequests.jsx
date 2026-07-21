@@ -246,7 +246,7 @@ const CustomerRequests = () => {
   return (
     <>
       <Helmet>
-        <title>Customer Requests - Tradex TV</title>
+        <title>Customer Requests - TRADE X TV</title>
       </Helmet>
 
       <div className="space-y-6">

@@ -32,24 +32,24 @@ const FAQ = ({ isHomePage = false }) => {
 
   const faqs = [
     {
-      question: 'How can I promote my business on Tradex TV?',
-      answer: 'Tradex TV offers various advertising and promotional opportunities for businesses. You can feature your products or services through our TV segments, website banners, or social media promotions. Our team will work with you to create a customized marketing package that fits your budget and goals. Contact our sales team to discuss your specific requirements.'
+      question: 'How can I promote my business on TRADE X TV?',
+      answer: 'TRADE X TV offers various advertising and promotional opportunities for businesses. You can feature your products or services through our TV segments, website banners, or social media promotions. Our team will work with you to create a customized marketing package that fits your budget and goals. Contact our sales team to discuss your specific requirements.'
     },
     {
-      question: 'Where can I sell my products through Tradex TV?',
-      answer: 'Tradex TV connects businesses with potential buyers through our B2B marketplace platform TradEthiopia. You can list your products, reach local and international buyers, and access fair market prices - all from your cellphone without traveling to physical marketplaces. We also feature select products on our TV shows to give them maximum visibility.'
+      question: 'Where can I sell my products through TRADE X TV?',
+      answer: 'TRADE X TV connects businesses with potential buyers through our B2B marketplace platform TradEthiopia. You can list your products, reach local and international buyers, and access fair market prices - all from your cellphone without traveling to physical marketplaces. We also feature select products on our TV shows to give them maximum visibility.'
     },
     {
-      question: 'How can I contact Tradex TV?',
+      question: 'How can I contact TRADE X TV?',
       answer: 'You can reach us through multiple channels: Visit our Contact Page for detailed information, Email us at info@tradextv.com, Call our office at +251-XXX-XXX-XXX, or Visit our physical office in Addis Ababa. Our customer service team is available Monday to Friday, 9:00 AM to 6:00 PM. We\'re always happy to hear from you!'
     },
     {
-      question: 'What kind of content does Tradex TV produce?',
-      answer: 'Tradex TV produces diverse business-focused content including market analysis, business interviews, entrepreneurship stories, agricultural updates, and B2B marketplace insights. We aim to create informed and innovative business content that helps our viewers make better business decisions. Our programs feature industry experts, successful entrepreneurs, and market leaders.'
+      question: 'What kind of content does TRADE X TV produce?',
+      answer: 'TRADE X TV produces diverse business-focused content including market analysis, business interviews, entrepreneurship stories, agricultural updates, and B2B marketplace insights. We aim to create informed and innovative business content that helps our viewers make better business decisions. Our programs feature industry experts, successful entrepreneurs, and market leaders.'
     },
     {
-      question: 'How can my business partner with Tradex TV?',
-      answer: 'Tradex TV welcomes business partnerships across various sectors. We collaborate with companies for content sponsorship, event coverage, business features, and advertising campaigns. We also partner with organizations to produce special programming that highlights business opportunities in Ethiopia and Africa. Contact our partnership team to explore collaboration opportunities.'
+      question: 'How can my business partner with TRADE X TV?',
+      answer: 'TRADE X TV welcomes business partnerships across various sectors. We collaborate with companies for content sponsorship, event coverage, business features, and advertising campaigns. We also partner with organizations to produce special programming that highlights business opportunities in Ethiopia and Africa. Contact our partnership team to explore collaboration opportunities.'
     }
   ];
 
@@ -141,9 +141,9 @@ const FAQ = ({ isHomePage = false }) => {
   return (
     <>
       <Helmet>
-        <title>FAQ - Tradex TV</title>
-        <meta name="description" content="Frequently Asked Questions about Tradex TV - your trusted business media platform connecting businesses effectively across Africa." />
-        <meta name="keywords" content="Tradex TV, FAQ, business media, Ethiopia business, B2B marketplace" />
+        <title>FAQ - TRADE X TV</title>
+        <meta name="description" content="Frequently Asked Questions about TRADE X TV - your trusted business media platform connecting businesses effectively across Africa." />
+        <meta name="keywords" content="TRADE X TV, FAQ, business media, Ethiopia business, B2B marketplace" />
       </Helmet>
 
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -162,7 +162,7 @@ const FAQ = ({ isHomePage = false }) => {
           </h1>
           
           <p className="text-lg max-w-2xl mx-auto" style={{ color: colors.textSecondary }}>
-            Find answers to common questions about Tradex TV and our services
+            Find answers to common questions about TRADE X TV and our services
           </p>
         </div>
 

@@ -80,7 +80,7 @@ const Settings = () => {
   return (
     <>
       <Helmet>
-        <title>Settings - Tradex TV</title>
+        <title>Settings - TRADE X TV</title>
       </Helmet>
 
       <div className="space-y-6">
